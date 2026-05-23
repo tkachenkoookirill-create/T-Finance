@@ -1,0 +1,1972 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-Finance</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+/* ─────────────────────────────────────────────────────────────
+   T-Finance · Design Tokens
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+
+  --bg: oklch(98.5% 0.004 80);
+  --bg-elev: oklch(100% 0 0);
+  --bg-sunken: oklch(96% 0.005 80);
+  --ink: oklch(20% 0.012 250);
+  --ink-2: oklch(40% 0.012 250);
+  --ink-3: oklch(58% 0.01 250);
+  --ink-4: oklch(78% 0.008 250);
+  --line: oklch(91% 0.005 250);
+  --line-2: oklch(95% 0.004 250);
+
+  --brand: oklch(36% 0.08 155);
+  --brand-2: oklch(46% 0.10 155);
+  --brand-tint: oklch(94% 0.025 155);
+  --brand-ink: oklch(20% 0.05 155);
+
+  --pos: oklch(58% 0.15 150);
+  --neg: oklch(60% 0.18 25);
+  --warn: oklch(72% 0.15 75);
+  --info: oklch(58% 0.13 240);
+  --plum: oklch(50% 0.13 320);
+
+  --c1: oklch(56% 0.12 155);
+  --c2: oklch(60% 0.13 240);
+  --c3: oklch(62% 0.14 65);
+  --c4: oklch(58% 0.14 25);
+  --c5: oklch(55% 0.13 320);
+  --c6: oklch(60% 0.10 200);
+  --c7: oklch(50% 0.05 250);
+
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  --shadow-1: 0 1px 0 oklch(20% 0.012 250 / 0.04), 0 0 0 1px oklch(20% 0.012 250 / 0.04);
+  --shadow-2: 0 1px 2px oklch(20% 0.012 250 / 0.06), 0 0 0 1px oklch(20% 0.012 250 / 0.06);
+  --shadow-3: 0 8px 24px -8px oklch(20% 0.012 250 / 0.16), 0 0 0 1px oklch(20% 0.012 250 / 0.06);
+
+  --gap: 16px;
+  --pad: 20px;
+  --row-h: 56px;
+  --hd: 64px;
+}
+
+[data-theme="dark"] {
+  --bg: oklch(18% 0.012 250);
+  --bg-elev: oklch(22% 0.014 250);
+  --bg-sunken: oklch(15% 0.012 250);
+  --ink: oklch(96% 0.005 80);
+  --ink-2: oklch(78% 0.008 250);
+  --ink-3: oklch(60% 0.01 250);
+  --ink-4: oklch(40% 0.012 250);
+  --line: oklch(28% 0.014 250);
+  --line-2: oklch(24% 0.014 250);
+  --brand: oklch(68% 0.12 155);
+  --brand-2: oklch(58% 0.10 155);
+  --brand-tint: oklch(28% 0.04 155);
+  --brand-ink: oklch(92% 0.04 155);
+  --shadow-1: 0 0 0 1px oklch(100% 0 0 / 0.06);
+  --shadow-2: 0 1px 2px oklch(0% 0 0 / 0.4), 0 0 0 1px oklch(100% 0 0 / 0.06);
+  --shadow-3: 0 10px 30px -10px oklch(0% 0 0 / 0.5), 0 0 0 1px oklch(100% 0 0 / 0.06);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-sunken);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+  letter-spacing: -0.005em;
+}
+#root { height: 100vh; display: flex; }
+
+.tf-app {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tf-mono { font-family: var(--font-mono); font-feature-settings: 'tnum', 'zero'; }
+.tf-serif { font-family: var(--font-serif); font-weight: 400; }
+.tf-tnum { font-variant-numeric: tabular-nums; }
+
+.tf-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tf-card--flush { padding: 0; }
+.tf-card--ghost { background: transparent; border: 1px dashed var(--line); }
+.tf-card--ink { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tf-card--brand { background: var(--brand); color: oklch(98% 0.02 155); border-color: var(--brand); }
+
+.tf-h-eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.tf-h-section { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; margin: 0; }
+.tf-num-big { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.tf-num-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+.tf-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+  background: var(--bg-sunken); color: var(--ink-2);
+  border: 1px solid var(--line);
+  letter-spacing: 0;
+}
+.tf-pill--pos { background: color-mix(in oklch, var(--pos) 14%, transparent); color: var(--pos); border-color: color-mix(in oklch, var(--pos) 24%, transparent); }
+.tf-pill--neg { background: color-mix(in oklch, var(--neg) 14%, transparent); color: var(--neg); border-color: color-mix(in oklch, var(--neg) 24%, transparent); }
+.tf-pill--brand { background: var(--brand-tint); color: var(--brand); border-color: color-mix(in oklch, var(--brand) 24%, transparent); }
+.tf-pill--ink { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.tf-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px; border-radius: var(--r-sm);
+  background: var(--ink); color: var(--bg);
+  border: 1px solid var(--ink);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.tf-btn:hover { opacity: 0.85; }
+.tf-btn--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.tf-btn--ghost:hover { background: var(--bg-sunken); }
+.tf-btn--brand { background: var(--brand); color: oklch(98% 0.02 155); border-color: var(--brand); }
+.tf-btn--sm { height: 28px; padding: 0 10px; font-size: 12px; border-radius: 8px; }
+.tf-btn--danger { background: var(--neg); color: white; border-color: var(--neg); }
+
+.tf-divider { height: 1px; background: var(--line); width: 100%; }
+.tf-divider--v { width: 1px; background: var(--line); align-self: stretch; }
+
+.tf-sidebar {
+  width: 240px;
+  border-right: 1px solid var(--line);
+  background: var(--bg);
+  padding: 18px 14px;
+  display: flex; flex-direction: column; gap: 4px;
+  flex-shrink: 0;
+}
+.tf-sidebar__brand { display:flex; align-items:center; gap:10px; padding: 4px 8px 22px; }
+.tf-nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding: 8px 10px; border-radius: 8px;
+  font-size: 13px; color: var(--ink-2); font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.tf-nav-item:hover { background: var(--bg-sunken); }
+.tf-nav-item--active { background: var(--bg-sunken); color: var(--ink); }
+.tf-nav-item__icon { width:16px; height:16px; color: var(--ink-3); flex-shrink:0; }
+.tf-nav-item--active .tf-nav-item__icon { color: var(--brand); }
+.tf-nav-group { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4); padding: 14px 10px 6px; font-weight: 700; }
+
+.tf-topbar {
+  height: var(--hd);
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  display:flex; align-items:center; gap: 16px;
+  flex-shrink: 0;
+}
+.tf-search {
+  flex: 1; max-width: 480px;
+  height: 36px; border-radius: 10px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  padding: 0 12px;
+  display:flex; align-items:center; gap: 8px;
+  color: var(--ink-3); font-size: 13px;
+  cursor: text;
+}
+.tf-kbd {
+  font: 500 10px var(--font-mono);
+  padding: 2px 5px; border-radius: 4px;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  color: var(--ink-3); margin-left: auto;
+}
+
+.tf-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color: oklch(98% 0.02 155);
+  display:flex; align-items:center; justify-content:center;
+  font-weight: 700; font-size: 11px;
+  flex-shrink: 0;
+}
+
+.tf-content {
+  flex: 1; overflow: hidden;
+  padding: 28px 32px;
+  display: flex; flex-direction: column;
+  gap: var(--gap);
+}
+
+.tf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tf-table th { text-align: left; font-weight: 600; color: var(--ink-3); padding: 10px 12px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--line); background: var(--bg-sunken); }
+.tf-table td { padding: 12px; border-bottom: 1px solid var(--line-2); color: var(--ink); vertical-align: middle; }
+.tf-table tr:last-child td { border-bottom: none; }
+.tf-table tr:hover td { background: var(--bg-sunken); }
+
+.tf-chart-grid line { stroke: var(--line); }
+.tf-chart-axis { fill: var(--ink-3); font: 500 10px var(--font-mono); }
+
+/* Modal */
+.tf-modal-overlay {
+  position: fixed; inset: 0;
+  background: oklch(0% 0 0 / 0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease;
+}
+.tf-modal {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  width: 480px;
+  max-width: calc(100vw - 40px);
+  box-shadow: var(--shadow-3);
+  display: flex; flex-direction: column; gap: 18px;
+  animation: slideUp 0.18s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.tf-input {
+  width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--bg-sunken); color: var(--ink);
+  padding: 10px 12px; font: 500 14px var(--font-sans);
+  outline: none; transition: border-color 0.15s;
+}
+.tf-input:focus { border-color: var(--brand); background: var(--bg-elev); }
+.tf-select {
+  width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--bg-sunken); color: var(--ink);
+  padding: 10px 12px; font: 500 14px var(--font-sans);
+  outline: none; cursor: pointer;
+  -webkit-appearance: none;
+}
+.tf-select:focus { border-color: var(--brand); }
+.tf-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+
+/* Toast */
+.tf-toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--ink); color: var(--bg);
+  padding: 12px 18px; border-radius: var(--r-md);
+  font-size: 13px; font-weight: 600;
+  box-shadow: var(--shadow-3);
+  z-index: 200;
+  animation: toastIn 0.2s ease;
+}
+@keyframes toastIn { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Theme toggle btn */
+.tf-theme-toggle {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--bg-sunken);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink-3); font-size: 14px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+// ─────────────────────────────────────────────────────────────
+// STORAGE LAYER
+// ─────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'tf_v1';
+
+function getInitialData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return null;
+}
+
+function saveData(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+}
+
+// ─────────────────────────────────────────────────────────────
+// DEFAULT SEED DATA
+// ─────────────────────────────────────────────────────────────
+function seedData() {
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const yesterday = new Date(now - 864e5).toISOString().split('T')[0];
+  const d2 = new Date(now - 2 * 864e5).toISOString().split('T')[0];
+  const d3 = new Date(now - 3 * 864e5).toISOString().split('T')[0];
+  const d7 = new Date(now - 7 * 864e5).toISOString().split('T')[0];
+  const d14 = new Date(now - 14 * 864e5).toISOString().split('T')[0];
+
+  return {
+    settings: { theme: 'light', currency: 'UZS', name: 'Алексей', initials: 'АП' },
+    accounts: [
+      { id: 'main', label: 'Основной счёт', type: 'debit', currency: 'UZS', balance: 12480000, color: 'var(--brand)', last4: '4421' },
+      { id: 'savings', label: 'Накопительный', type: 'savings', currency: 'UZS', balance: 48600000, color: 'var(--c2)', last4: '8814', rate: '22%' },
+      { id: 'usd', label: 'USD счёт', type: 'fx', currency: 'USD', balance: 4280, color: 'var(--c3)', last4: '7702' },
+      { id: 'invest', label: 'Инвестиционный', type: 'invest', currency: 'UZS', balance: 23600000, color: 'var(--c5)', last4: '0341' },
+    ],
+    transactions: [
+      { id: 't1', label: 'Зарплата', cat: 'salary', amount: 15000000, date: today, time: '09:00', accountId: 'main', note: '' },
+      { id: 't2', label: 'Korzinka', cat: 'food', amount: -145000, date: today, time: '14:08', accountId: 'main', note: '', icon: '🛒' },
+      { id: 't3', label: 'Яндекс Go', cat: 'transport', amount: -28000, date: today, time: '08:30', accountId: 'main', note: '' },
+      { id: 't4', label: 'Kafe Samarkand', cat: 'food', amount: -186000, date: yesterday, time: '13:20', accountId: 'main', note: '' },
+      { id: 't5', label: 'Netflix', cat: 'services', amount: -89000, date: yesterday, time: '11:00', accountId: 'main', note: '', icon: '🎬', recurring: true },
+      { id: 't6', label: 'Аренда', cat: 'rent', amount: -2800000, date: d2, time: '09:00', accountId: 'main', note: '', icon: '🏠', recurring: true },
+      { id: 't7', label: 'Пополнение накопит.', cat: 'transfer', amount: -2000000, date: d2, time: '10:00', accountId: 'main', note: '' },
+      { id: 't8', label: 'Пополнение накопит.', cat: 'transfer', amount: 2000000, date: d2, time: '10:00', accountId: 'savings', note: '' },
+      { id: 't9', label: 'Gym fit', cat: 'healthcare', amount: -350000, date: d3, time: '18:00', accountId: 'main', note: '', icon: '🏋️', recurring: true },
+      { id: 't10', label: 'Дивиденды', cat: 'dividends', amount: 480000, date: d7, time: '10:00', accountId: 'invest', note: '' },
+      { id: 't11', label: 'O\'zbekiston Airways', cat: 'entertainment', amount: -1200000, date: d7, time: '15:30', accountId: 'main', note: '✈️ Билеты Ташкент-Стамбул' },
+      { id: 't12', label: 'UCell', cat: 'services', amount: -45000, date: d14, time: '08:00', accountId: 'main', note: '', recurring: true },
+    ],
+    portfolio: [
+      { id: 'p1', ticker: 'AAPL', name: 'Apple', qty: 8, avgPrice: 185.40, currentPrice: 189.60, currency: 'USD', color: 'var(--c1)' },
+      { id: 'p2', ticker: 'MSFT', name: 'Microsoft', qty: 4, avgPrice: 410.20, currentPrice: 425.80, currency: 'USD', color: 'var(--c2)' },
+      { id: 'p3', ticker: 'NVDA', name: 'NVIDIA', qty: 5, avgPrice: 880.00, currentPrice: 950.00, currency: 'USD', color: 'var(--c3)' },
+      { id: 'p4', ticker: 'GOLD', name: 'Золото', qty: 2.5, avgPrice: 2300000, currentPrice: 2420000, currency: 'UZS', color: 'var(--c4)' },
+      { id: 'p5', ticker: 'CASH', name: 'Кэш (USD)', qty: 1200, avgPrice: 1, currentPrice: 1, currency: 'USD', color: 'var(--c7)' },
+    ],
+    goals: [
+      { id: 'g1', label: 'Отпуск · Европа', target: 15000000, current: 8400000, due: '2026-06-01', icon: '✈️' },
+      { id: 'g2', label: 'Подушка безопасности', target: 60000000, current: 48600000, due: '2025-12-31', icon: '🛡️' },
+      { id: 'g3', label: 'Новый ноутбук', target: 8000000, current: 3200000, due: '2026-03-01', icon: '💻' },
+    ],
+    budgets: [
+      { cat: 'food', limit: 2000000 },
+      { cat: 'transport', limit: 500000 },
+      { cat: 'entertainment', limit: 1500000 },
+      { cat: 'services', limit: 800000 },
+      { cat: 'healthcare', limit: 1000000 },
+    ],
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+const CATS = {
+  salary: { label: 'Зарплата', icon: '💼', color: 'var(--pos)' },
+  food: { label: 'Еда', icon: '🍽️', color: 'var(--c2)' },
+  transport: { label: 'Транспорт', icon: '🚗', color: 'var(--c3)' },
+  rent: { label: 'Аренда', icon: '🏠', color: 'var(--c1)' },
+  entertainment: { label: 'Развлечения', icon: '🎭', color: 'var(--c4)' },
+  services: { label: 'Сервисы', icon: '📱', color: 'var(--c5)' },
+  healthcare: { label: 'Здоровье', icon: '💊', color: 'var(--c6)' },
+  dividends: { label: 'Дивиденды', icon: '📈', color: 'var(--pos)' },
+  transfer: { label: 'Перевод', icon: '⇆', color: 'var(--ink-3)' },
+  freelance: { label: 'Фриланс', icon: '💻', color: 'var(--brand)' },
+  other: { label: 'Прочее', icon: '📌', color: 'var(--c7)' },
+};
+
+function fmt(n, cur = 'UZS', dec = 0) {
+  const abs = Math.abs(n);
+  const s = abs.toLocaleString('ru-RU', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  const sign = n < 0 ? '−' : n > 0 ? '+' : '';
+  if (cur === 'USD') return `${sign}$${s}`;
+  if (cur === 'EUR') return `${sign}€${s}`;
+  return `${sign}${s} ${cur}`;
+}
+
+function fmtAbs(n, cur = 'UZS', dec = 0) {
+  const abs = Math.abs(n);
+  const s = abs.toLocaleString('ru-RU', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  if (cur === 'USD') return `$${s}`;
+  if (cur === 'EUR') return `€${s}`;
+  return `${s} ${cur}`;
+}
+
+function dateLabel(dateStr) {
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 864e5).toISOString().split('T')[0];
+  if (dateStr === today) return 'Сегодня';
+  if (dateStr === yesterday) return 'Вчера';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+}
+
+function uid() { return '_' + Math.random().toString(36).slice(2, 9); }
+
+// ─────────────────────────────────────────────────────────────
+// SVG CHARTS
+// ─────────────────────────────────────────────────────────────
+function niceTicks(min, max, count = 4) {
+  const range = max - min || 1;
+  const step = Math.pow(10, Math.floor(Math.log10(range / count)));
+  const err = (range / count) / step;
+  const mult = err >= 7.5 ? 10 : err >= 3 ? 5 : err >= 1.5 ? 2 : 1;
+  const s = mult * step;
+  const t = [];
+  for (let v = Math.ceil(min / s) * s; v <= max; v += s) t.push(v);
+  return t;
+}
+
+function Sparkline({ values = [], width = 96, height = 28, color = 'var(--brand)', fill = true, stroke = 1.5 }) {
+  if (!values.length) return null;
+  const min = Math.min(...values), max = Math.max(...values);
+  const r = max - min || 1;
+  const pad = 2;
+  const W = width - pad * 2, H = height - pad * 2;
+  const step = W / (values.length - 1 || 1);
+  const pts = values.map((v, i) => [pad + i * step, pad + H - ((v - min) / r) * H]);
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = d + ` L ${pad + W} ${height - pad} L ${pad} ${height - pad} Z`;
+  const id = 'sg-' + Math.random().toString(36).slice(2, 7);
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
+      {fill && <>
+        <defs>
+          <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.22" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={area} fill={`url(#${id})`} />
+      </>}
+      <path d={d} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LineChart({ data = [], width = 640, height = 220, color = 'var(--brand)', xLabels = [], yFormat = v => v, padding = { l: 48, r: 16, t: 12, b: 28 } }) {
+  if (!data.length) return null;
+  const min = Math.min(...data), max = Math.max(...data);
+  const r = max - min || 1;
+  const innerW = width - padding.l - padding.r;
+  const innerH = height - padding.t - padding.b;
+  const step = innerW / (data.length - 1);
+  const pts = data.map((v, i) => [padding.l + i * step, padding.t + innerH - ((v - min) / r) * innerH]);
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = d + ` L ${padding.l + innerW} ${padding.t + innerH} L ${padding.l} ${padding.t + innerH} Z`;
+  const ticks = niceTicks(min, max, 4);
+  const gid = 'lc-' + Math.random().toString(36).slice(2, 7);
+  return (
+    <svg width="100%" viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+      <defs>
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.20" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <g className="tf-chart-grid">
+        {ticks.map((t, i) => {
+          const y = padding.t + innerH - ((t - min) / r) * innerH;
+          return <g key={i}>
+            <line x1={padding.l} x2={width - padding.r} y1={y} y2={y} strokeDasharray="2 4" />
+            <text x={padding.l - 8} y={y + 3} textAnchor="end" className="tf-chart-axis">{yFormat(t)}</text>
+          </g>;
+        })}
+      </g>
+      <path d={area} fill={`url(#${gid})`} />
+      <path d={d} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={pts[pts.length-1][0]} cy={pts[pts.length-1][1]} r="5" fill="var(--bg-elev)" stroke={color} strokeWidth="2" />
+      {xLabels.length > 0 && xLabels.map((lbl, i) => {
+        const x = padding.l + (i / (xLabels.length - 1)) * innerW;
+        return <text key={i} x={x} y={height - 8} textAnchor="middle" className="tf-chart-axis">{lbl}</text>;
+      })}
+    </svg>
+  );
+}
+
+function BarChart({ data = [], labels = [], width = 640, height = 200, color = 'var(--brand)', yFormat = v => v, padding = { l: 48, r: 16, t: 12, b: 28 } }) {
+  if (!data.length) return null;
+  const max = Math.max(...data, 0);
+  const innerW = width - padding.l - padding.r;
+  const innerH = height - padding.t - padding.b;
+  const slot = innerW / data.length;
+  const bw = Math.min(slot * 0.6, 28);
+  const ticks = niceTicks(0, max, 4);
+  return (
+    <svg width="100%" viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+      <g className="tf-chart-grid">
+        {ticks.map((t, i) => {
+          const y = padding.t + innerH - (t / (max || 1)) * innerH;
+          return <g key={i}>
+            <line x1={padding.l} x2={width - padding.r} y1={y} y2={y} strokeDasharray="2 4" />
+            <text x={padding.l - 8} y={y + 3} textAnchor="end" className="tf-chart-axis">{yFormat(t)}</text>
+          </g>;
+        })}
+      </g>
+      {data.map((v, i) => {
+        const x = padding.l + slot * i + (slot - bw) / 2;
+        const barH = Math.max(2, (v / (max || 1)) * innerH);
+        const y = padding.t + innerH - barH;
+        return <rect key={i} x={x} y={y} width={bw} height={barH} rx="3" fill={color} opacity="0.85" />;
+      })}
+      {labels.map((lbl, i) => {
+        const x = padding.l + slot * i + slot / 2;
+        return <text key={i} x={x} y={height - 8} textAnchor="middle" className="tf-chart-axis">{lbl}</text>;
+      })}
+    </svg>
+  );
+}
+
+function Donut({ data = [], size = 200, thick = 28, gap = 0.012, center = null }) {
+  const total = data.reduce((s, d) => s + d.value, 0) || 1;
+  const r = size / 2 - 4;
+  const ri = r - thick;
+  let a = -Math.PI / 2;
+  const arc = (a0, a1) => {
+    const large = a1 - a0 > Math.PI ? 1 : 0;
+    const x0 = size/2+Math.cos(a0)*r, y0 = size/2+Math.sin(a0)*r;
+    const x1 = size/2+Math.cos(a1)*r, y1 = size/2+Math.sin(a1)*r;
+    const xi0 = size/2+Math.cos(a0)*ri, yi0 = size/2+Math.sin(a0)*ri;
+    const xi1 = size/2+Math.cos(a1)*ri, yi1 = size/2+Math.sin(a1)*ri;
+    return `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${ri} ${ri} 0 ${large} 0 ${xi0} ${yi0} Z`;
+  };
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {data.map((d, i) => {
+        const sweep = (d.value / total) * Math.PI * 2;
+        const a0 = a + gap / 2;
+        const a1 = a + sweep - gap / 2;
+        a += sweep;
+        return <path key={i} d={arc(a0, a1)} fill={d.color || 'var(--brand)'} />;
+      })}
+      {center && (
+        <foreignObject x="0" y="0" width={size} height={size}>
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', textAlign: 'center', pointerEvents: 'none' }}>{center}</div>
+        </foreignObject>
+      )}
+    </svg>
+  );
+}
+
+function HBar({ used = 0.6, color = 'var(--brand)', track = 'var(--bg-sunken)', height = 8 }) {
+  return (
+    <div style={{ height, background: track, borderRadius: 999, overflow: 'hidden' }}>
+      <div style={{ width: `${Math.min(100, used * 100)}%`, height: '100%', background: color, transition: 'width 0.4s ease', borderRadius: 999 }} />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// ICONS
+// ─────────────────────────────────────────────────────────────
+const Ico = {
+  home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 11 12 4l8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>,
+  card: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>,
+  arrows: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M7 4v16m0-16-3 3m3-3 3 3M17 20V4m0 16-3-3m3 3 3-3"/></svg>,
+  chart: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 20V8m6 12V4m6 16v-8m6 8V12"/></svg>,
+  pie: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 3v9h9"/><path d="M21 12a9 9 0 1 1-9-9"/></svg>,
+  invest: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 17l6-6 4 4 8-8M14 7h7v7"/></svg>,
+  list: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 6h16M4 12h16M4 18h10"/></svg>,
+  settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.2-1.6l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2.7-1.6L13 2h-2l-.8 2.8a7 7 0 0 0-2.7 1.6l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12a7 7 0 0 0 .2 1.6l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2.7 1.6L11 22h2l.8-2.8a7 7 0 0 0 2.7-1.6l2.3.9 2-3.4-2-1.5c.1-.5.2-1 .2-1.6Z"/></svg>,
+  bell: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4l2-2zM10 20a2 2 0 0 0 4 0"/></svg>,
+  search: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>,
+  plus: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 5v14M5 12h14"/></svg>,
+  close: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>,
+  trash: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>,
+  edit: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>,
+  target: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+  moon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+  sun: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>,
+  arrowRight: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg>,
+  wallet: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 7v12h18V9H7a4 4 0 0 1-4-2zM3 7a2 2 0 0 1 2-2h14v4"/><circle cx="17" cy="14" r="1.4"/></svg>,
+};
+
+// Logo
+function TFLogo({ size = 22 }) {
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-sans)' }}>
+      <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
+        <rect x="0" y="0" width="32" height="32" rx="8" fill="var(--brand)" />
+        <path d="M6 10 H26 M16 10 V24" stroke="oklch(98% 0.02 155)" strokeWidth="3.6" strokeLinecap="square" />
+        <circle cx="24" cy="6" r="3" fill="var(--pos)" stroke="var(--brand)" strokeWidth="1.4" />
+      </svg>
+      <span style={{ fontFamily: 'var(--font-serif)', fontSize: size * 0.95, letterSpacing: '-0.02em', fontWeight: 400 }}>
+        T<span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: size * 0.72, letterSpacing: '-0.02em' }}>—Finance</span>
+      </span>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// SHARED LAYOUT COMPONENTS
+// ─────────────────────────────────────────────────────────────
+function Sidebar({ active, onNav }) {
+  const items = [
+    { id: 'overview', icon: Ico.home, label: 'Главная', group: 'ДЕНЬГИ' },
+    { id: 'accounts', icon: Ico.card, label: 'Счета' },
+    { id: 'history', icon: Ico.list, label: 'История' },
+    { id: 'analytics', icon: Ico.pie, label: 'Аналитика', group: 'ИНСТРУМЕНТЫ' },
+    { id: 'invest', icon: Ico.invest, label: 'Инвестиции' },
+    { id: 'goals', icon: Ico.target, label: 'Цели' },
+    { id: 'settings', icon: Ico.settings, label: 'Настройки', group: 'АККАУНТ' },
+  ];
+  return (
+    <aside className="tf-sidebar">
+      <div className="tf-sidebar__brand"><TFLogo size={22} /></div>
+      {items.map((it) => (
+        <React.Fragment key={it.id}>
+          {it.group && <div className="tf-nav-group">{it.group}</div>}
+          <div className={'tf-nav-item' + (active === it.id ? ' tf-nav-item--active' : '')} onClick={() => onNav(it.id)}>
+            <span className="tf-nav-item__icon">{it.icon}</span>
+            <span>{it.label}</span>
+          </div>
+        </React.Fragment>
+      ))}
+    </aside>
+  );
+}
+
+function Topbar({ title, theme, onThemeToggle, onAdd }) {
+  return (
+    <header className="tf-topbar">
+      {title && <div style={{ fontWeight: 600, fontSize: 14 }}>{title}</div>}
+      <div className="tf-search" style={{ marginLeft: title ? 0 : 0 }}>
+        <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.search}</span>
+        <span>Поиск…</span>
+        <span className="tf-kbd">⌘K</span>
+      </div>
+      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+        {onAdd && (
+          <button className="tf-btn tf-btn--brand tf-btn--sm" onClick={onAdd}>
+            <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.plus}</span>
+            Добавить
+          </button>
+        )}
+        <button className="tf-theme-toggle" onClick={onThemeToggle} title="Сменить тему">
+          <span style={{ width: 16, height: 16, display: 'inline-flex' }}>{theme === 'dark' ? Ico.sun : Ico.moon}</span>
+        </button>
+        <span style={{ width: 16, height: 16, color: 'var(--ink-3)' }}>{Ico.bell}</span>
+        <div className="tf-avatar">АП</div>
+      </div>
+    </header>
+  );
+}
+
+function TxnRow({ tx, cur, onDelete }) {
+  const cat = CATS[tx.cat] || CATS.other;
+  const isInflow = tx.amount > 0;
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr auto auto', gap: 12, alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line-2)' }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: 8,
+        background: isInflow ? 'color-mix(in oklch, var(--pos) 14%, transparent)' : 'var(--bg-sunken)',
+        color: isInflow ? 'var(--pos)' : 'var(--ink-2)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
+      }}>{tx.icon || cat.icon}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+        <span style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tx.label}</span>
+        <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>{cat.label} · {tx.time}</span>
+      </div>
+      <span className="tf-mono tf-tnum" style={{ fontWeight: 600, color: isInflow ? 'var(--pos)' : 'var(--ink)', fontSize: 13 }}>
+        {isInflow ? '+' : '−'}{fmtAbs(tx.amount, cur)}
+      </span>
+      {onDelete && (
+        <button onClick={() => onDelete(tx.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', width: 20, height: 20, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.trash}</span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// ADD TRANSACTION MODAL
+// ─────────────────────────────────────────────────────────────
+function AddTransactionModal({ accounts, onSave, onClose }) {
+  const [form, setForm] = useState({
+    label: '', amount: '', cat: 'food', type: 'expense',
+    accountId: accounts[0]?.id || '', date: new Date().toISOString().split('T')[0],
+    time: new Date().toTimeString().slice(0, 5), note: '',
+  });
+
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleSave = () => {
+    if (!form.label || !form.amount) return;
+    const amt = parseFloat(form.amount.replace(/\s/g, '').replace(',', '.'));
+    if (isNaN(amt)) return;
+    onSave({
+      id: uid(),
+      label: form.label,
+      amount: form.type === 'expense' ? -Math.abs(amt) : Math.abs(amt),
+      cat: form.cat,
+      accountId: form.accountId,
+      date: form.date,
+      time: form.time,
+      note: form.note,
+    });
+    onClose();
+  };
+
+  return (
+    <div className="tf-modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="tf-modal">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Новая операция</div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-3)', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Ico.close}</span>
+          </button>
+        </div>
+
+        {/* Type switch */}
+        <div style={{ display: 'flex', background: 'var(--bg-sunken)', border: '1px solid var(--line)', borderRadius: 999, padding: 3 }}>
+          {[{ v: 'expense', l: '↑ Расход' }, { v: 'income', l: '↓ Доход' }].map(o => (
+            <button key={o.v} onClick={() => set('type', o.v)} style={{
+              flex: 1, border: 'none', cursor: 'pointer', borderRadius: 999, padding: '7px 0',
+              background: form.type === o.v ? 'var(--bg-elev)' : 'transparent',
+              color: form.type === o.v ? (o.v === 'expense' ? 'var(--neg)' : 'var(--pos)') : 'var(--ink-3)',
+              fontWeight: 600, fontSize: 13, fontFamily: 'var(--font-sans)',
+              boxShadow: form.type === o.v ? 'var(--shadow-1)' : 'none',
+            }}>{o.l}</button>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+            <label className="tf-label">Название</label>
+            <input className="tf-input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="Название операции" />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label className="tf-label">Сумма</label>
+            <input className="tf-input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0" type="number" min="0" />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label className="tf-label">Категория</label>
+            <select className="tf-select" value={form.cat} onChange={e => set('cat', e.target.value)}>
+              {Object.entries(CATS).map(([k, v]) => <option key={k} value={k}>{v.icon} {v.label}</option>)}
+            </select>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label className="tf-label">Счёт</label>
+            <select className="tf-select" value={form.accountId} onChange={e => set('accountId', e.target.value)}>
+              {accounts.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
+            </select>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label className="tf-label">Дата</label>
+            <input className="tf-input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label className="tf-label">Время</label>
+            <input className="tf-input" type="time" value={form.time} onChange={e => set('time', e.target.value)} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+            <label className="tf-label">Заметка (необязательно)</label>
+            <input className="tf-input" value={form.note} onChange={e => set('note', e.target.value)} placeholder="Комментарий…" />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          <button className="tf-btn tf-btn--ghost" onClick={onClose}>Отмена</button>
+          <button className="tf-btn tf-btn--brand" onClick={handleSave}>Сохранить</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// OVERVIEW / DASHBOARD
+// ─────────────────────────────────────────────────────────────
+function Overview({ data, onNav }) {
+  const { accounts, transactions, settings } = data;
+  const cur = settings.currency;
+
+  const totalBalance = accounts.reduce((s, a) => s + (a.currency === cur ? a.balance : a.balance), 0);
+
+  const now = new Date();
+  const thisMonth = now.toISOString().slice(0, 7);
+  const monthTxs = transactions.filter(t => t.date.startsWith(thisMonth));
+  const income = monthTxs.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
+  const expense = monthTxs.filter(t => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+
+  // Balance sparkline — last 30 days daily cumulative
+  const balanceSeries = useMemo(() => {
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now - i * 864e5).toISOString().split('T')[0];
+      days.push(d);
+    }
+    let running = totalBalance;
+    // go backwards from today
+    const txByDate = {};
+    transactions.forEach(t => {
+      if (!txByDate[t.date]) txByDate[t.date] = 0;
+      txByDate[t.date] += t.amount;
+    });
+    const pts = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now - i * 864e5).toISOString().split('T')[0];
+      pts.push(running);
+      if (txByDate[d]) running -= txByDate[d];
+    }
+    return pts.reverse();
+  }, [transactions, totalBalance]);
+
+  // Spend by category this month
+  const catSpend = useMemo(() => {
+    const res = {};
+    monthTxs.filter(t => t.amount < 0).forEach(t => {
+      if (!res[t.cat]) res[t.cat] = 0;
+      res[t.cat] += Math.abs(t.amount);
+    });
+    return Object.entries(res).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({
+      key: k, value: v, ...CATS[k] || CATS.other,
+    }));
+  }, [monthTxs]);
+
+  const recentTxs = [...transactions].sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time)).slice(0, 5);
+
+  // Monthly spend last 6 months
+  const monthlySpend = useMemo(() => {
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = d.toISOString().slice(0, 7);
+      const label = d.toLocaleDateString('ru-RU', { month: 'short' });
+      const total = transactions.filter(t => t.date.startsWith(key) && t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+      months.push({ label, total });
+    }
+    return months;
+  }, [transactions]);
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      {/* Greeting */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <div>
+          <div className="tf-h-eyebrow">{new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 32, fontWeight: 400, margin: '6px 0 0', letterSpacing: '-0.02em' }}>Привет, {settings.name} 👋</h1>
+        </div>
+      </div>
+
+      {/* KPI row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--gap)' }}>
+        {[
+          { label: 'Общий баланс', value: fmtAbs(totalBalance, cur), sub: null, spark: balanceSeries },
+          { label: 'Доход · месяц', value: fmtAbs(income, cur), sub: income > 0 ? '+100%' : null, tone: 'pos' },
+          { label: 'Расход · месяц', value: fmtAbs(expense, cur), sub: expense > 0 ? `${Math.round(expense/income*100)}% от дохода` : null, tone: expense > income ? 'neg' : 'pos' },
+          { label: 'Накоплено', value: fmtAbs(income - expense, cur), tone: income > expense ? 'pos' : 'neg' },
+        ].map((tile, i) => (
+          <div key={i} className="tf-card" style={{ gap: 6 }}>
+            <div className="tf-h-eyebrow">{tile.label}</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+              <span className="tf-num-big" style={{ fontSize: 22 }}>{tile.value}</span>
+              {tile.sub && <span className="tf-pill" style={{
+                background: tile.tone === 'pos' ? 'color-mix(in oklch, var(--pos) 14%, transparent)' : tile.tone === 'neg' ? 'color-mix(in oklch, var(--neg) 14%, transparent)' : 'var(--bg-sunken)',
+                color: tile.tone === 'pos' ? 'var(--pos)' : tile.tone === 'neg' ? 'var(--neg)' : 'var(--ink-3)',
+                borderColor: 'transparent',
+              }}>{tile.sub}</span>}
+            </div>
+            {tile.spark && <Sparkline values={tile.spark} width={180} height={32} color="var(--brand)" />}
+          </div>
+        ))}
+      </div>
+
+      {/* Balance chart + Categories */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 'var(--gap)' }}>
+        <div className="tf-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <h3 className="tf-h-section">Баланс</h3>
+              <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>Суммарно по всем счетам · 30 дней</div>
+            </div>
+          </div>
+          <LineChart
+            data={balanceSeries}
+            width={620} height={200}
+            yFormat={v => (v / 1000000).toFixed(1) + 'M'}
+            xLabels={['', '', '', '', '']}
+          />
+        </div>
+        <div className="tf-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h3 className="tf-h-section">Категории</h3>
+            <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>{new Date().toLocaleDateString('ru-RU', { month: 'long' })}</span>
+          </div>
+          {catSpend.length > 0 ? (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0' }}>
+                <Donut size={160} thick={22} data={catSpend.map(c => ({ value: c.value, color: c.color }))}
+                  center={<div>
+                    <div style={{ fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Расходы</div>
+                    <div className="tf-num-big" style={{ fontSize: 18 }}>{fmtAbs(expense, cur)}</div>
+                  </div>} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {catSpend.slice(0, 5).map(c => (
+                  <div key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12 }}>
+                    <span style={{ fontSize: 14 }}>{c.icon}</span>
+                    <span style={{ flex: 1, color: 'var(--ink-2)' }}>{c.label}</span>
+                    <span className="tf-mono" style={{ fontWeight: 600 }}>{fmtAbs(c.value, cur)}</span>
+                    <span style={{ color: 'var(--ink-3)', fontSize: 11 }}>{Math.round(c.value / expense * 100)}%</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div style={{ color: 'var(--ink-3)', fontSize: 13, textAlign: 'center', padding: '32px 0' }}>Нет расходов за этот месяц</div>
+          )}
+        </div>
+      </div>
+
+      {/* Accounts + Recent */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 'var(--gap)' }}>
+        <div className="tf-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h3 className="tf-h-section">Счета</h3>
+            <span className="tf-btn tf-btn--ghost tf-btn--sm" onClick={() => onNav('accounts')} style={{ cursor: 'pointer' }}>Все счета →</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {accounts.map(a => (
+              <div key={a.id} style={{ border: '1px solid var(--line)', borderRadius: 12, padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: a.color }} />
+                  <span style={{ fontSize: 12, fontWeight: 600 }}>{a.label}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--ink-3)', fontFamily: 'var(--font-mono)' }}>·· {a.last4}</span>
+                </div>
+                <div className="tf-num-big" style={{ fontSize: 18 }}>{fmtAbs(a.balance, a.currency)}</div>
+                {a.rate && <span className="tf-pill tf-pill--brand" style={{ width: 'fit-content', fontSize: 10 }}>{a.rate}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="tf-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h3 className="tf-h-section">Последние операции</h3>
+            <span style={{ fontSize: 12, color: 'var(--ink-3)', cursor: 'pointer' }} onClick={() => onNav('history')}>Все →</span>
+          </div>
+          {recentTxs.map(tx => <TxnRow key={tx.id} tx={tx} cur={cur} />)}
+          {recentTxs.length === 0 && <div style={{ color: 'var(--ink-3)', fontSize: 13, padding: '16px 0', textAlign: 'center' }}>Нет операций</div>}
+        </div>
+      </div>
+
+      {/* Monthly bars */}
+      <div className="tf-card">
+        <h3 className="tf-h-section">Расходы по месяцам</h3>
+        <BarChart
+          data={monthlySpend.map(m => m.total / 1000000)}
+          labels={monthlySpend.map(m => m.label)}
+          width={1100} height={160}
+          yFormat={v => v.toFixed(1) + 'M'}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// ACCOUNTS SCREEN
+// ─────────────────────────────────────────────────────────────
+function Accounts({ data, dispatch }) {
+  const { accounts, settings } = data;
+  const cur = settings.currency;
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ label: '', type: 'debit', currency: 'UZS', balance: '', last4: '' });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const colors = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)', 'var(--brand)'];
+
+  const handleAdd = () => {
+    if (!form.label || !form.balance) return;
+    dispatch({ type: 'ADD_ACCOUNT', payload: {
+      id: uid(),
+      label: form.label,
+      type: form.type,
+      currency: form.currency,
+      balance: parseFloat(form.balance.replace(/\s/g, '')),
+      color: colors[accounts.length % colors.length],
+      last4: form.last4 || '0000',
+    }});
+    setShowAdd(false);
+    setForm({ label: '', type: 'debit', currency: 'UZS', balance: '', last4: '' });
+  };
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <div className="tf-h-eyebrow">{accounts.length} счетов</div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 36, lineHeight: 1, marginTop: 4, letterSpacing: '-0.02em' }}>
+            {fmtAbs(accounts.reduce((s, a) => s + a.balance, 0), cur)}
+          </div>
+        </div>
+        <button className="tf-btn tf-btn--brand" onClick={() => setShowAdd(true)}>
+          <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.plus}</span>
+          Новый счёт
+        </button>
+      </div>
+
+      <div className="tf-card tf-card--flush">
+        <table className="tf-table">
+          <thead>
+            <tr>
+              <th>Счёт</th>
+              <th>Тип</th>
+              <th>Валюта</th>
+              <th style={{ textAlign: 'right' }}>Баланс</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {accounts.map(a => (
+              <tr key={a.id}>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: `color-mix(in oklch, ${a.color} 18%, transparent)`, color: a.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 12 }}>
+                      {a.label.charAt(0)}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 13 }}>{a.label}</div>
+                      <div className="tf-mono" style={{ fontSize: 11, color: 'var(--ink-3)' }}>·· {a.last4}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span className="tf-pill">{
+                    a.type === 'debit' ? 'Дебетовый' :
+                    a.type === 'savings' ? 'Накопительный' :
+                    a.type === 'fx' ? 'Валютный' : 'Инвест.'
+                  }</span>
+                  {a.rate && <span className="tf-pill tf-pill--brand" style={{ marginLeft: 6 }}>{a.rate}</span>}
+                </td>
+                <td style={{ color: 'var(--ink-3)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{a.currency}</td>
+                <td style={{ textAlign: 'right' }}>
+                  <div className="tf-num-big" style={{ fontSize: 16 }}>{fmtAbs(a.balance, a.currency)}</div>
+                </td>
+                <td>
+                  <button onClick={() => dispatch({ type: 'DELETE_ACCOUNT', payload: a.id })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', padding: 4 }}>
+                    <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.trash}</span>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {showAdd && (
+        <div className="tf-modal-overlay" onClick={e => e.target === e.currentTarget && setShowAdd(false)}>
+          <div className="tf-modal">
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Новый счёт</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1/-1' }}>
+                <label className="tf-label">Название</label>
+                <input className="tf-input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="Название счёта" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Тип</label>
+                <select className="tf-select" value={form.type} onChange={e => set('type', e.target.value)}>
+                  <option value="debit">Дебетовый</option>
+                  <option value="savings">Накопительный</option>
+                  <option value="fx">Валютный</option>
+                  <option value="invest">Инвестиционный</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Валюта</label>
+                <select className="tf-select" value={form.currency} onChange={e => set('currency', e.target.value)}>
+                  {['UZS', 'USD', 'EUR', 'RUB'].map(c => <option key={c}>{c}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Начальный баланс</label>
+                <input className="tf-input" value={form.balance} onChange={e => set('balance', e.target.value)} placeholder="0" type="number" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Последние 4 цифры карты</label>
+                <input className="tf-input" value={form.last4} onChange={e => set('last4', e.target.value)} placeholder="0000" maxLength={4} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+              <button className="tf-btn tf-btn--ghost" onClick={() => setShowAdd(false)}>Отмена</button>
+              <button className="tf-btn tf-btn--brand" onClick={handleAdd}>Добавить</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// HISTORY SCREEN
+// ─────────────────────────────────────────────────────────────
+function History({ data, dispatch }) {
+  const { transactions, settings } = data;
+  const cur = settings.currency;
+  const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+
+  const sorted = useMemo(() => [...transactions].sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time)), [transactions]);
+
+  const filtered = useMemo(() => {
+    let tx = sorted;
+    if (filter === 'income') tx = tx.filter(t => t.amount > 0);
+    if (filter === 'expense') tx = tx.filter(t => t.amount < 0);
+    if (filter !== 'all' && filter !== 'income' && filter !== 'expense') tx = tx.filter(t => t.cat === filter);
+    if (search) tx = tx.filter(t => t.label.toLowerCase().includes(search.toLowerCase()));
+    return tx;
+  }, [sorted, filter, search]);
+
+  const groups = useMemo(() => {
+    const g = {};
+    filtered.forEach(t => { (g[t.date] = g[t.date] || []).push(t); });
+    return g;
+  }, [filtered]);
+
+  const filterOpts = [
+    { v: 'all', l: 'Все' },
+    { v: 'income', l: '↓ Доходы' },
+    { v: 'expense', l: '↑ Расходы' },
+    ...Object.entries(CATS).slice(0, 6).map(([k, v]) => ({ v: k, l: v.icon + ' ' + v.label })),
+  ];
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <div className="tf-h-eyebrow">{transactions.length} операций</div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 32, marginTop: 4, letterSpacing: '-0.02em' }}>История</div>
+        </div>
+      </div>
+
+      <input className="tf-input" value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍  Поиск по операциям…" style={{ maxWidth: 400 }} />
+
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        {filterOpts.map(o => (
+          <span key={o.v} className={'tf-pill' + (filter === o.v ? ' tf-pill--ink' : '')} style={{ cursor: 'pointer' }} onClick={() => setFilter(o.v)}>{o.l}</span>
+        ))}
+      </div>
+
+      {Object.entries(groups).map(([day, items]) => {
+        const sum = items.reduce((s, t) => s + t.amount, 0);
+        return (
+          <div key={day} className="tf-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 className="tf-h-section">{dateLabel(day)}</h3>
+              <span className="tf-mono" style={{ fontSize: 12, color: sum > 0 ? 'var(--pos)' : 'var(--neg)' }}>
+                {fmt(sum, cur)}
+              </span>
+            </div>
+            {items.map(tx => <TxnRow key={tx.id} tx={tx} cur={cur} onDelete={id => dispatch({ type: 'DELETE_TX', payload: id })} />)}
+          </div>
+        );
+      })}
+      {Object.keys(groups).length === 0 && <div style={{ color: 'var(--ink-3)', textAlign: 'center', padding: '48px 0', fontSize: 14 }}>Нет операций</div>}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// ANALYTICS SCREEN
+// ─────────────────────────────────────────────────────────────
+function Analytics({ data }) {
+  const { transactions, settings, budgets } = data;
+  const cur = settings.currency;
+  const now = new Date();
+
+  const [period, setPeriod] = useState('30d');
+
+  const filtered = useMemo(() => {
+    const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365;
+    const cutoff = new Date(now - days * 864e5).toISOString().split('T')[0];
+    return transactions.filter(t => t.date >= cutoff);
+  }, [transactions, period]);
+
+  const income = filtered.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
+  const expense = filtered.filter(t => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+
+  const catSpend = useMemo(() => {
+    const res = {};
+    filtered.filter(t => t.amount < 0).forEach(t => {
+      if (!res[t.cat]) res[t.cat] = 0;
+      res[t.cat] += Math.abs(t.amount);
+    });
+    return Object.entries(res).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({
+      key: k, value: v, ...CATS[k] || CATS.other,
+    }));
+  }, [filtered]);
+
+  // Monthly spend last 6 months
+  const monthlyData = useMemo(() => {
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = d.toISOString().slice(0, 7);
+      const label = d.toLocaleDateString('ru-RU', { month: 'short' });
+      const spend = transactions.filter(t => t.date.startsWith(key) && t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+      const inc = transactions.filter(t => t.date.startsWith(key) && t.amount > 0).reduce((s, t) => s + t.amount, 0);
+      months.push({ label, spend, inc });
+    }
+    return months;
+  }, [transactions]);
+
+  const periodOpts = [{ v: '7d', l: '7 дней' }, { v: '30d', l: '30 дней' }, { v: '90d', l: '90 дней' }, { v: '1y', l: '1 год' }];
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <div className="tf-h-eyebrow">Аналитика</div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 32, marginTop: 4, letterSpacing: '-0.02em' }}>Куда уходят деньги</div>
+        </div>
+        <div style={{ display: 'inline-flex', background: 'var(--bg-sunken)', border: '1px solid var(--line)', borderRadius: 999, padding: 3 }}>
+          {periodOpts.map(o => (
+            <button key={o.v} onClick={() => setPeriod(o.v)} style={{
+              border: 'none', cursor: 'pointer',
+              background: o.v === period ? 'var(--bg-elev)' : 'transparent',
+              color: o.v === period ? 'var(--ink)' : 'var(--ink-3)',
+              fontWeight: 600, fontSize: 11, fontFamily: 'var(--font-sans)',
+              padding: '4px 10px', borderRadius: 999,
+              boxShadow: o.v === period ? 'var(--shadow-1)' : 'none',
+            }}>{o.l}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--gap)' }}>
+        {[
+          { label: 'Поступления', value: fmtAbs(income, cur), tone: 'pos' },
+          { label: 'Расходы', value: fmtAbs(expense, cur), tone: expense > income ? 'neg' : null },
+          { label: 'Средний чек', value: fmtAbs(Math.round(expense / Math.max(filtered.filter(t => t.amount < 0).length, 1)), cur) },
+          { label: 'Норма сбережений', value: income > 0 ? `${Math.round((1 - expense/income) * 100)}%` : '—', tone: income > expense ? 'pos' : 'neg' },
+        ].map((t, i) => (
+          <div key={i} className="tf-card" style={{ gap: 6 }}>
+            <div className="tf-h-eyebrow">{t.label}</div>
+            <span className="tf-num-big" style={{ fontSize: 22, color: t.tone === 'pos' ? 'var(--pos)' : t.tone === 'neg' ? 'var(--neg)' : 'var(--ink)' }}>{t.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--gap)' }}>
+        {/* Spending by month */}
+        <div className="tf-card">
+          <h3 className="tf-h-section">Расходы по месяцам</h3>
+          <BarChart
+            data={monthlyData.map(m => m.spend / 1000000)}
+            labels={monthlyData.map(m => m.label)}
+            width={600} height={200}
+            yFormat={v => v.toFixed(1) + 'M'}
+          />
+        </div>
+
+        {/* Categories */}
+        <div className="tf-card">
+          <h3 className="tf-h-section">Категории расходов</h3>
+          {catSpend.length > 0 ? (
+            <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+              <Donut size={160} thick={22}
+                data={catSpend.map(c => ({ value: c.value, color: c.color }))}
+                center={<div>
+                  <div className="tf-num-big" style={{ fontSize: 18 }}>{catSpend.length}</div>
+                  <div style={{ fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>кат.</div>
+                </div>}
+              />
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {catSpend.slice(0, 6).map(c => (
+                  <div key={c.key} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                      <span>{c.icon} {c.label}</span>
+                      <span className="tf-mono">{fmtAbs(c.value, cur)}</span>
+                    </div>
+                    <HBar used={c.value / expense} color={c.color} height={5} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div style={{ color: 'var(--ink-3)', fontSize: 13, textAlign: 'center', padding: '32px 0' }}>Нет данных</div>
+          )}
+        </div>
+      </div>
+
+      {/* Budgets */}
+      {budgets.length > 0 && (
+        <div className="tf-card">
+          <h3 className="tf-h-section">Бюджеты · этот месяц</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {budgets.map(b => {
+              const cat = CATS[b.cat] || CATS.other;
+              const thisMonth = now.toISOString().slice(0, 7);
+              const spent = transactions.filter(t => t.cat === b.cat && t.amount < 0 && t.date.startsWith(thisMonth)).reduce((s, t) => s + Math.abs(t.amount), 0);
+              const pct = spent / b.limit;
+              return (
+                <div key={b.cat} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                    <span>{cat.icon} {cat.label}</span>
+                    <span className="tf-mono" style={{ fontSize: 12, color: pct > 1 ? 'var(--neg)' : 'var(--ink-3)' }}>
+                      {fmtAbs(spent, cur)} / {fmtAbs(b.limit, cur)}
+                    </span>
+                  </div>
+                  <HBar used={pct} color={pct > 1 ? 'var(--neg)' : pct > 0.8 ? 'var(--warn)' : cat.color} height={6} />
+                  <div style={{ fontSize: 11, color: pct > 1 ? 'var(--neg)' : 'var(--ink-3)' }}>
+                    {pct > 1 ? `Превышен на ${fmtAbs(spent - b.limit, cur)}` : `Осталось ${fmtAbs(b.limit - spent, cur)}`}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Full categories table */}
+      {catSpend.length > 0 && (
+        <div className="tf-card tf-card--flush">
+          <table className="tf-table">
+            <thead>
+              <tr>
+                <th>Категория</th>
+                <th>Транзакций</th>
+                <th>Доля</th>
+                <th style={{ textAlign: 'right' }}>Сумма</th>
+              </tr>
+            </thead>
+            <tbody>
+              {catSpend.map(c => (
+                <tr key={c.key}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 18 }}>{c.icon}</span>
+                      <span style={{ fontWeight: 600 }}>{c.label}</span>
+                    </div>
+                  </td>
+                  <td style={{ color: 'var(--ink-3)' }}>{filtered.filter(t => t.cat === c.key && t.amount < 0).length}</td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, maxWidth: 200 }}>
+                      <HBar used={c.value / expense} color={c.color} height={6} />
+                      <span className="tf-mono" style={{ fontSize: 11, color: 'var(--ink-3)' }}>{Math.round(c.value / expense * 100)}%</span>
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'right' }}><span className="tf-num-mono" style={{ fontWeight: 600 }}>{fmtAbs(c.value, cur)}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// INVESTMENTS SCREEN
+// ─────────────────────────────────────────────────────────────
+function Investments({ data, dispatch }) {
+  const { portfolio, settings } = data;
+  const cur = settings.currency;
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ ticker: '', name: '', qty: '', avgPrice: '', currentPrice: '', currency: 'USD' });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const colors = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)', 'var(--c7)'];
+
+  const totalValue = portfolio.reduce((s, p) => s + p.qty * p.currentPrice, 0);
+  const totalCost = portfolio.reduce((s, p) => s + p.qty * p.avgPrice, 0);
+  const totalPnl = totalValue - totalCost;
+
+  const handleAdd = () => {
+    if (!form.ticker || !form.qty) return;
+    dispatch({ type: 'ADD_POSITION', payload: {
+      id: uid(),
+      ticker: form.ticker.toUpperCase(),
+      name: form.name || form.ticker,
+      qty: parseFloat(form.qty),
+      avgPrice: parseFloat(form.avgPrice) || 0,
+      currentPrice: parseFloat(form.currentPrice) || parseFloat(form.avgPrice) || 0,
+      currency: form.currency,
+      color: colors[portfolio.length % colors.length],
+    }});
+    setShowAdd(false);
+    setForm({ ticker: '', name: '', qty: '', avgPrice: '', currentPrice: '', currency: 'USD' });
+  };
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <div className="tf-h-eyebrow">Портфель · {portfolio.length} позиций</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginTop: 6 }}>
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 36, letterSpacing: '-0.02em' }}>{fmtAbs(totalValue, 'USD')}</div>
+            {totalPnl !== 0 && (
+              <span className={`tf-pill tf-pill--${totalPnl > 0 ? 'pos' : 'neg'}`}>
+                {fmt(totalPnl, 'USD')} ({totalCost > 0 ? fmt(totalPnl/totalCost*100, '') + '%' : ''})
+              </span>
+            )}
+          </div>
+        </div>
+        <button className="tf-btn tf-btn--brand" onClick={() => setShowAdd(true)}>
+          <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.plus}</span>
+          Добавить позицию
+        </button>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 'var(--gap)' }}>
+        <div className="tf-card">
+          <h3 className="tf-h-section">Аллокация</h3>
+          {portfolio.length > 0 ? (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '6px 0' }}>
+                <Donut size={180} thick={24}
+                  data={portfolio.map(p => ({ value: p.qty * p.currentPrice, color: p.color }))}
+                  center={<div>
+                    <div style={{ fontSize: 22, fontWeight: 700 }}>{portfolio.length}</div>
+                    <div style={{ fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>активов</div>
+                  </div>} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {portfolio.map(p => {
+                  const val = p.qty * p.currentPrice;
+                  const pct = Math.round(val / totalValue * 100);
+                  return (
+                    <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12 }}>
+                      <span style={{ width: 8, height: 8, borderRadius: 2, background: p.color, flexShrink: 0 }} />
+                      <span className="tf-mono" style={{ fontWeight: 700, minWidth: 52 }}>{p.ticker}</span>
+                      <span style={{ flex: 1, color: 'var(--ink-2)' }}>{p.name}</span>
+                      <span className="tf-mono" style={{ fontWeight: 600 }}>{pct}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : <div style={{ color: 'var(--ink-3)', fontSize: 13, padding: '32px 0', textAlign: 'center' }}>Нет позиций</div>}
+        </div>
+
+        <div className="tf-card tf-card--flush">
+          <table className="tf-table">
+            <thead>
+              <tr>
+                <th>Тикер</th>
+                <th>Кол-во</th>
+                <th>Ср. цена</th>
+                <th>Тек. цена</th>
+                <th>P&L</th>
+                <th style={{ textAlign: 'right' }}>Стоимость</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {portfolio.map(p => {
+                const val = p.qty * p.currentPrice;
+                const pnl = (p.currentPrice - p.avgPrice) * p.qty;
+                const pnlPct = p.avgPrice > 0 ? (p.currentPrice - p.avgPrice) / p.avgPrice * 100 : 0;
+                return (
+                  <tr key={p.id}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: 2, background: p.color }} />
+                        <div>
+                          <div className="tf-mono" style={{ fontWeight: 700, fontSize: 13 }}>{p.ticker}</div>
+                          <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{p.name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="tf-mono" style={{ color: 'var(--ink-3)' }}>{p.qty}</td>
+                    <td className="tf-mono">{fmtAbs(p.avgPrice, p.currency, 2)}</td>
+                    <td className="tf-mono">{fmtAbs(p.currentPrice, p.currency, 2)}</td>
+                    <td>
+                      <span style={{ color: pnl > 0 ? 'var(--pos)' : pnl < 0 ? 'var(--neg)' : 'var(--ink-3)', fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+                        {pnl !== 0 ? `${pnl > 0 ? '+' : ''}${pnlPct.toFixed(1)}%` : '—'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <span className="tf-num-mono" style={{ fontWeight: 600 }}>{fmtAbs(val, p.currency)}</span>
+                    </td>
+                    <td>
+                      <button onClick={() => dispatch({ type: 'DELETE_POSITION', payload: p.id })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', padding: 4 }}>
+                        <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.trash}</span>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {portfolio.length === 0 && (
+                <tr><td colSpan="7" style={{ textAlign: 'center', color: 'var(--ink-3)', padding: '32px 0' }}>Нет позиций — добавьте первую</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {showAdd && (
+        <div className="tf-modal-overlay" onClick={e => e.target === e.currentTarget && setShowAdd(false)}>
+          <div className="tf-modal">
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Новая позиция</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Тикер</label>
+                <input className="tf-input" value={form.ticker} onChange={e => set('ticker', e.target.value.toUpperCase())} placeholder="AAPL" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Название</label>
+                <input className="tf-input" value={form.name} onChange={e => set('name', e.target.value)} placeholder="Apple Inc." />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Количество</label>
+                <input className="tf-input" value={form.qty} onChange={e => set('qty', e.target.value)} placeholder="10" type="number" min="0" step="0.01" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Валюта</label>
+                <select className="tf-select" value={form.currency} onChange={e => set('currency', e.target.value)}>
+                  {['USD', 'EUR', 'UZS', 'RUB'].map(c => <option key={c}>{c}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Средняя цена покупки</label>
+                <input className="tf-input" value={form.avgPrice} onChange={e => set('avgPrice', e.target.value)} placeholder="185.40" type="number" min="0" step="0.01" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Текущая цена</label>
+                <input className="tf-input" value={form.currentPrice} onChange={e => set('currentPrice', e.target.value)} placeholder="189.60" type="number" min="0" step="0.01" />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+              <button className="tf-btn tf-btn--ghost" onClick={() => setShowAdd(false)}>Отмена</button>
+              <button className="tf-btn tf-btn--brand" onClick={handleAdd}>Добавить</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// GOALS SCREEN
+// ─────────────────────────────────────────────────────────────
+function Goals({ data, dispatch }) {
+  const { goals, settings } = data;
+  const cur = settings.currency;
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ label: '', target: '', current: '', due: '', icon: '🎯' });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleAdd = () => {
+    if (!form.label || !form.target) return;
+    dispatch({ type: 'ADD_GOAL', payload: {
+      id: uid(),
+      label: form.label,
+      target: parseFloat(form.target.replace(/\s/g, '')),
+      current: parseFloat(form.current.replace(/\s/g, '')) || 0,
+      due: form.due,
+      icon: form.icon,
+    }});
+    setShowAdd(false);
+    setForm({ label: '', target: '', current: '', due: '', icon: '🎯' });
+  };
+
+  const handleTopup = (gid, amount) => {
+    dispatch({ type: 'UPDATE_GOAL', payload: { id: gid, delta: amount } });
+  };
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <div className="tf-h-eyebrow">{goals.length} целей</div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 32, marginTop: 4, letterSpacing: '-0.02em' }}>Финансовые цели</div>
+        </div>
+        <button className="tf-btn tf-btn--brand" onClick={() => setShowAdd(true)}>
+          <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.plus}</span>
+          Новая цель
+        </button>
+      </div>
+
+      {goals.length === 0 && (
+        <div className="tf-card tf-card--ghost" style={{ padding: 40, alignItems: 'center', gap: 12 }}>
+          <div style={{ fontSize: 48 }}>🎯</div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Нет целей</div>
+          <div style={{ color: 'var(--ink-3)', fontSize: 13 }}>Добавьте финансовую цель, чтобы отслеживать прогресс</div>
+          <button className="tf-btn tf-btn--brand" onClick={() => setShowAdd(true)}>Создать цель</button>
+        </div>
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 'var(--gap)' }}>
+        {goals.map(g => {
+          const p = g.current / g.target;
+          const done = p >= 1;
+          const daysLeft = g.due ? Math.ceil((new Date(g.due) - new Date()) / 864e5) : null;
+          return (
+            <div key={g.id} className="tf-card" style={{ gap: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ fontSize: 28 }}>{g.icon}</div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: 15 }}>{g.label}</div>
+                    {g.due && <div style={{ fontSize: 11, color: daysLeft < 30 ? 'var(--warn)' : 'var(--ink-3)' }}>
+                      {new Date(g.due).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+                      {daysLeft !== null && ` · ${daysLeft} дн.`}
+                    </div>}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {done && <span className="tf-pill tf-pill--pos">✓ Достигнута</span>}
+                  <button onClick={() => dispatch({ type: 'DELETE_GOAL', payload: g.id })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', padding: 4 }}>
+                    <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.trash}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <HBar used={p} color={done ? 'var(--pos)' : 'var(--brand)'} height={10} track="var(--bg-sunken)" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-2)', fontWeight: 600 }}>{fmtAbs(g.current, cur)}</span>
+                  <span style={{ color: 'var(--ink-3)' }}>{Math.round(p * 100)}% из {fmtAbs(g.target, cur)}</span>
+                </div>
+              </div>
+
+              {!done && (
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {[100000, 500000, 1000000].map(amt => (
+                    <button key={amt} className="tf-btn tf-btn--ghost tf-btn--sm" onClick={() => handleTopup(g.id, amt)}>
+                      +{fmtAbs(amt, cur)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {showAdd && (
+        <div className="tf-modal-overlay" onClick={e => e.target === e.currentTarget && setShowAdd(false)}>
+          <div className="tf-modal">
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Новая цель</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Иконка</label>
+                <input className="tf-input" value={form.icon} onChange={e => set('icon', e.target.value)} placeholder="🎯" style={{ fontSize: 22 }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Название цели</label>
+                <input className="tf-input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="Например, отпуск" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Целевая сумма</label>
+                <input className="tf-input" value={form.target} onChange={e => set('target', e.target.value)} placeholder="10 000 000" type="number" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Накоплено сейчас</label>
+                <input className="tf-input" value={form.current} onChange={e => set('current', e.target.value)} placeholder="0" type="number" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1/-1' }}>
+                <label className="tf-label">Дата дедлайна</label>
+                <input className="tf-input" type="date" value={form.due} onChange={e => set('due', e.target.value)} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+              <button className="tf-btn tf-btn--ghost" onClick={() => setShowAdd(false)}>Отмена</button>
+              <button className="tf-btn tf-btn--brand" onClick={handleAdd}>Создать</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// SETTINGS SCREEN
+// ─────────────────────────────────────────────────────────────
+function Settings({ data, dispatch, theme, onThemeToggle }) {
+  const { settings, budgets } = data;
+  const [form, setForm] = useState({ ...settings });
+  const [budgetForm, setBudgetForm] = useState({ cat: 'food', limit: '' });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleSaveProfile = () => {
+    dispatch({ type: 'UPDATE_SETTINGS', payload: form });
+  };
+
+  const handleAddBudget = () => {
+    if (!budgetForm.limit) return;
+    dispatch({ type: 'SET_BUDGET', payload: { cat: budgetForm.cat, limit: parseFloat(budgetForm.limit) } });
+    setBudgetForm({ cat: 'food', limit: '' });
+  };
+
+  const handleReset = () => {
+    if (confirm('Сбросить все данные? Это действие необратимо.')) {
+      dispatch({ type: 'RESET' });
+    }
+  };
+
+  return (
+    <div className="tf-content" style={{ overflowY: 'auto' }}>
+      <div>
+        <div className="tf-h-eyebrow">Настройки</div>
+        <div style={{ fontFamily: 'var(--font-serif)', fontSize: 32, marginTop: 4, letterSpacing: '-0.02em' }}>Профиль и настройки</div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--gap)' }}>
+        {/* Profile */}
+        <div className="tf-card">
+          <h3 className="tf-h-section">Профиль</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="tf-label">Имя</label>
+              <input className="tf-input" value={form.name} onChange={e => set('name', e.target.value)} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="tf-label">Аббревиатура (аватар)</label>
+              <input className="tf-input" value={form.initials} onChange={e => set('initials', e.target.value)} maxLength={2} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="tf-label">Основная валюта</label>
+              <select className="tf-select" value={form.currency} onChange={e => set('currency', e.target.value)}>
+                {['UZS', 'USD', 'EUR', 'RUB'].map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+          <button className="tf-btn tf-btn--brand" style={{ width: 'fit-content' }} onClick={handleSaveProfile}>Сохранить</button>
+        </div>
+
+        {/* Appearance */}
+        <div className="tf-card">
+          <h3 className="tf-h-section">Внешний вид</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--line-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 500 }}>Тёмная тема</span>
+            <button className="tf-btn tf-btn--ghost tf-btn--sm" onClick={onThemeToggle}>
+              <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{theme === 'dark' ? Ico.sun : Ico.moon}</span>
+              {theme === 'dark' ? 'Светлая' : 'Тёмная'}
+            </button>
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.6 }}>
+            Тема применяется только в текущем браузере и сохраняется при перезагрузке.
+          </div>
+        </div>
+
+        {/* Budgets */}
+        <div className="tf-card">
+          <h3 className="tf-h-section">Бюджеты</h3>
+          {budgets.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+              {budgets.map(b => {
+                const cat = CATS[b.cat] || CATS.other;
+                return (
+                  <div key={b.cat} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--line-2)' }}>
+                    <span style={{ fontSize: 16 }}>{cat.icon}</span>
+                    <span style={{ flex: 1, fontSize: 13 }}>{cat.label}</span>
+                    <span className="tf-mono" style={{ fontSize: 12, color: 'var(--ink-2)' }}>{fmtAbs(b.limit, settings.currency)}</span>
+                    <button onClick={() => dispatch({ type: 'DELETE_BUDGET', payload: b.cat })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', padding: 2 }}>
+                      <span style={{ width: 12, height: 12, display: 'inline-flex' }}>{Ico.trash}</span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: 8 }}>
+            <select className="tf-select" value={budgetForm.cat} onChange={e => setBudgetForm(f => ({ ...f, cat: e.target.value }))} style={{ flex: 1 }}>
+              {Object.entries(CATS).filter(([k]) => !['salary', 'dividends', 'freelance', 'transfer'].includes(k)).map(([k, v]) => (
+                <option key={k} value={k}>{v.icon} {v.label}</option>
+              ))}
+            </select>
+            <input className="tf-input" value={budgetForm.limit} onChange={e => setBudgetForm(f => ({ ...f, limit: e.target.value }))} placeholder="Лимит" type="number" style={{ width: 120 }} />
+            <button className="tf-btn" onClick={handleAddBudget}>+</button>
+          </div>
+        </div>
+
+        {/* Data management */}
+        <div className="tf-card">
+          <h3 className="tf-h-section">Данные</h3>
+          <div style={{ fontSize: 13, color: 'var(--ink-3)', lineHeight: 1.6 }}>
+            Все данные хранятся локально в вашем браузере (localStorage). Никакие данные не передаются на сервер.
+          </div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <button className="tf-btn tf-btn--ghost" onClick={() => {
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+              a.download = 'tf-backup.json'; a.click();
+            }}>📥 Экспорт данных</button>
+            <button className="tf-btn tf-btn--danger" onClick={handleReset}>🗑 Сбросить всё</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────────
+function Toast({ message, onDone }) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2500);
+    return () => clearTimeout(t);
+  }, []);
+  return <div className="tf-toast">{message}</div>;
+}
+
+// ─────────────────────────────────────────────────────────────
+// REDUCER
+// ─────────────────────────────────────────────────────────────
+function reducer(state, action) {
+  switch (action.type) {
+    case 'ADD_TX': {
+      const tx = action.payload;
+      // Update account balance
+      const accounts = state.accounts.map(a =>
+        a.id === tx.accountId ? { ...a, balance: a.balance + tx.amount } : a
+      );
+      return { ...state, transactions: [tx, ...state.transactions], accounts };
+    }
+    case 'DELETE_TX': {
+      const tx = state.transactions.find(t => t.id === action.payload);
+      const accounts = tx ? state.accounts.map(a =>
+        a.id === tx.accountId ? { ...a, balance: a.balance - tx.amount } : a
+      ) : state.accounts;
+      return { ...state, transactions: state.transactions.filter(t => t.id !== action.payload), accounts };
+    }
+    case 'ADD_ACCOUNT':
+      return { ...state, accounts: [...state.accounts, action.payload] };
+    case 'DELETE_ACCOUNT':
+      return { ...state, accounts: state.accounts.filter(a => a.id !== action.payload) };
+    case 'ADD_POSITION':
+      return { ...state, portfolio: [...state.portfolio, action.payload] };
+    case 'DELETE_POSITION':
+      return { ...state, portfolio: state.portfolio.filter(p => p.id !== action.payload) };
+    case 'UPDATE_POSITION':
+      return { ...state, portfolio: state.portfolio.map(p => p.id === action.payload.id ? { ...p, ...action.payload } : p) };
+    case 'ADD_GOAL':
+      return { ...state, goals: [...state.goals, action.payload] };
+    case 'DELETE_GOAL':
+      return { ...state, goals: state.goals.filter(g => g.id !== action.payload) };
+    case 'UPDATE_GOAL':
+      return { ...state, goals: state.goals.map(g => g.id === action.payload.id ? { ...g, current: Math.min(g.target, g.current + action.payload.delta) } : g) };
+    case 'UPDATE_SETTINGS':
+      return { ...state, settings: { ...state.settings, ...action.payload } };
+    case 'SET_BUDGET': {
+      const idx = state.budgets.findIndex(b => b.cat === action.payload.cat);
+      const budgets = idx >= 0
+        ? state.budgets.map((b, i) => i === idx ? action.payload : b)
+        : [...state.budgets, action.payload];
+      return { ...state, budgets };
+    }
+    case 'DELETE_BUDGET':
+      return { ...state, budgets: state.budgets.filter(b => b.cat !== action.payload) };
+    case 'RESET':
+      localStorage.removeItem(STORAGE_KEY);
+      return seedData();
+    default:
+      return state;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// APP
+// ─────────────────────────────────────────────────────────────
+function App() {
+  const [data, dispatch_] = React.useReducer(reducer, null, () => getInitialData() || seedData());
+  const [screen, setScreen] = useState('overview');
+  const [theme, setTheme] = useState(() => (getInitialData()?.settings?.theme) || 'light');
+  const [showAddTx, setShowAddTx] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const dispatch = useCallback((action) => {
+    dispatch_(action);
+  }, []);
+
+  // Persist
+  useEffect(() => {
+    saveData({ ...data, settings: { ...data.settings, theme } });
+  }, [data, theme]);
+
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const handleAddTx = (tx) => {
+    dispatch({ type: 'ADD_TX', payload: tx });
+    setToast(`Добавлено: ${tx.label}`);
+  };
+
+  const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
+
+  const screens = {
+    overview: <Overview data={data} onNav={setScreen} />,
+    accounts: <Accounts data={data} dispatch={dispatch} />,
+    history: <History data={data} dispatch={dispatch} />,
+    analytics: <Analytics data={data} />,
+    invest: <Investments data={data} dispatch={dispatch} />,
+    goals: <Goals data={data} dispatch={dispatch} />,
+    settings: <Settings data={data} dispatch={dispatch} theme={theme} onThemeToggle={toggleTheme} />,
+  };
+
+  const titles = {
+    overview: 'Главная',
+    accounts: 'Счета',
+    history: 'История',
+    analytics: 'Аналитика',
+    invest: 'Инвестиции',
+    goals: 'Цели',
+    settings: 'Настройки',
+  };
+
+  const addableScreens = ['overview', 'history', 'accounts'];
+
+  return (
+    <div data-theme={theme} style={{ display: 'flex', width: '100%', height: '100vh', background: 'var(--bg)' }}>
+      <Sidebar active={screen} onNav={setScreen} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <Topbar
+          title={titles[screen]}
+          theme={theme}
+          onThemeToggle={toggleTheme}
+          onAdd={addableScreens.includes(screen) ? () => setShowAddTx(true) : null}
+        />
+        {screens[screen]}
+      </div>
+
+      {showAddTx && (
+        <AddTransactionModal
+          accounts={data.accounts}
+          onSave={handleAddTx}
+          onClose={() => setShowAddTx(false)}
+        />
+      )}
+
+      {toast && <Toast message={toast} onDone={() => setToast(null)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
