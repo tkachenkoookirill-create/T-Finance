@@ -691,11 +691,11 @@ function TxnRow({ tx, cur, onDelete, onEdit }) {
     <div style={{ display: 'grid', gridTemplateColumns: cols, gap: 12, alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line-2)' }}>
       <div style={{
         width: 32, height: 32, borderRadius: 8,
-        background: isInflow ? 'color-mix(in oklch, var(--pos) 14%, transparent)' : 'var(--bg-sunken)',
-        color: isInflow ? 'var(--pos)' : 'var(--ink-2)',
+        background: tx.transfer ? 'color-mix(in oklch, var(--info) 14%, transparent)' : isInflow ? 'color-mix(in oklch, var(--pos) 14%, transparent)' : 'var(--bg-sunken)',
+        color: tx.transfer ? 'var(--info)' : isInflow ? 'var(--pos)' : 'var(--ink-2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700,
         flexShrink: 0,
-      }}>{isInflow ? '+' : '−'}</div>
+      }}>{tx.transfer ? '⇄' : isInflow ? '+' : '−'}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
         <span style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tx.label}</span>
         <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>{cat.label}</span>
@@ -725,13 +725,42 @@ function TxnFormModal({ title, initial, accounts, onSave, onClose }) {
   const [form, setForm] = useState(initial);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
+  const isTransfer = form.type === 'transfer';
+
   const handleSave = () => {
-    if (!form.label || !form.amount) return;
+    if (!form.amount) return;
     const amt = parseFloat(String(form.amount).replace(/\s/g, '').replace(',', '.'));
-    if (isNaN(amt)) return;
-    onSave({ ...form, amount: form.type === 'expense' ? -Math.abs(amt) : Math.abs(amt) });
+    if (isNaN(amt) || amt <= 0) return;
+
+    if (isTransfer) {
+      if (!form.fromAccountId || !form.toAccountId) return;
+      if (form.fromAccountId === form.toAccountId) return;
+      onSave({
+        type: 'transfer',
+        amount: amt,
+        fromAccountId: form.fromAccountId,
+        toAccountId: form.toAccountId,
+        date: form.date,
+        note: form.note,
+        label: form.label || 'Перевод',
+      });
+    } else {
+      if (!form.label) return;
+      onSave({ ...form, amount: form.type === 'expense' ? -Math.abs(amt) : Math.abs(amt) });
+    }
     onClose();
   };
+
+  const typeOpts = [
+    { v: 'expense', l: '↑ Расход' },
+    { v: 'income',  l: '↓ Доход'  },
+    { v: 'transfer', l: '⇄ Перевод' },
+  ];
+
+  const typeColor = { expense: 'var(--neg)', income: 'var(--pos)', transfer: 'var(--info)' };
+
+  const fromAcc = accounts.find(a => a.id === form.fromAccountId);
+  const toAcc   = accounts.find(a => a.id === form.toAccountId);
 
   return (
     <div className="tf-modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -745,47 +774,110 @@ function TxnFormModal({ title, initial, accounts, onSave, onClose }) {
 
         {/* Type switch */}
         <div style={{ display: 'flex', background: 'var(--bg-sunken)', border: '1px solid var(--line)', borderRadius: 999, padding: 3 }}>
-          {[{ v: 'expense', l: '↑ Расход' }, { v: 'income', l: '↓ Доход' }].map(o => (
+          {typeOpts.map(o => (
             <button key={o.v} onClick={() => set('type', o.v)} style={{
               flex: 1, border: 'none', cursor: 'pointer', borderRadius: 999, padding: '7px 0',
               background: form.type === o.v ? 'var(--bg-elev)' : 'transparent',
-              color: form.type === o.v ? (o.v === 'expense' ? 'var(--neg)' : 'var(--pos)') : 'var(--ink-3)',
-              fontWeight: 600, fontSize: 13, fontFamily: 'var(--font-sans)',
+              color: form.type === o.v ? typeColor[o.v] : 'var(--ink-3)',
+              fontWeight: 600, fontSize: 12, fontFamily: 'var(--font-sans)',
               boxShadow: form.type === o.v ? 'var(--shadow-1)' : 'none',
+              whiteSpace: 'nowrap',
             }}>{o.l}</button>
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
-            <label className="tf-label">Название</label>
-            <input className="tf-input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="Название операции" />
+        {isTransfer ? (
+          /* ── TRANSFER FIELDS ── */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {/* From → To visual */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '12px 14px', borderRadius: 'var(--r-md)',
+              background: 'var(--bg-sunken)', border: '1px solid var(--line)',
+            }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Откуда</span>
+                <span style={{ fontWeight: 600, fontSize: 13, color: fromAcc ? 'var(--ink)' : 'var(--ink-4)' }}>
+                  {fromAcc ? fromAcc.label : '—'}
+                </span>
+                {fromAcc && <span style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'var(--font-mono)' }}>{fmtAbs(fromAcc.balance, fromAcc.currency)}</span>}
+              </div>
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'color-mix(in oklch, var(--info) 15%, transparent)', color: 'var(--info)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>⇄</div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3, textAlign: 'right' }}>
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Куда</span>
+                <span style={{ fontWeight: 600, fontSize: 13, color: toAcc ? 'var(--ink)' : 'var(--ink-4)' }}>
+                  {toAcc ? toAcc.label : '—'}
+                </span>
+                {toAcc && <span style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'var(--font-mono)' }}>{fmtAbs(toAcc.balance, toAcc.currency)}</span>}
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Откуда (счёт списания)</label>
+                <select className="tf-select" value={form.fromAccountId} onChange={e => set('fromAccountId', e.target.value)}>
+                  <option value="">— выберите —</option>
+                  {accounts.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Куда (счёт зачисления)</label>
+                <select className="tf-select" value={form.toAccountId} onChange={e => set('toAccountId', e.target.value)}>
+                  <option value="">— выберите —</option>
+                  {accounts.filter(a => a.id !== form.fromAccountId).map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Сумма</label>
+                <input className="tf-input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0" type="number" min="0" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="tf-label">Дата</label>
+                <input className="tf-input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+                <label className="tf-label">Заметка (необязательно)</label>
+                <input className="tf-input" value={form.note} onChange={e => set('note', e.target.value)} placeholder="Например: пополнение накопительного" />
+              </div>
+            </div>
+
+            {form.fromAccountId && form.toAccountId && form.fromAccountId === form.toAccountId && (
+              <div style={{ fontSize: 12, color: 'var(--neg)', padding: '6px 0' }}>⚠ Счёт источника и назначения не должны совпадать</div>
+            )}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <label className="tf-label">Сумма</label>
-            <input className="tf-input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0" type="number" min="0" />
+        ) : (
+          /* ── REGULAR INCOME / EXPENSE FIELDS ── */
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+              <label className="tf-label">Название</label>
+              <input className="tf-input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="Название операции" />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="tf-label">Сумма</label>
+              <input className="tf-input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0" type="number" min="0" />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="tf-label">Категория</label>
+              <select className="tf-select" value={form.cat} onChange={e => set('cat', e.target.value)}>
+                {Object.entries(CATS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+              </select>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="tf-label">Счёт</label>
+              <select className="tf-select" value={form.accountId} onChange={e => set('accountId', e.target.value)}>
+                {accounts.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
+              </select>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+              <label className="tf-label">Дата</label>
+              <input className="tf-input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+              <label className="tf-label">Заметка (необязательно)</label>
+              <input className="tf-input" value={form.note} onChange={e => set('note', e.target.value)} placeholder="Комментарий…" />
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <label className="tf-label">Категория</label>
-            <select className="tf-select" value={form.cat} onChange={e => set('cat', e.target.value)}>
-              {Object.entries(CATS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
-            </select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <label className="tf-label">Счёт</label>
-            <select className="tf-select" value={form.accountId} onChange={e => set('accountId', e.target.value)}>
-              {accounts.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
-            </select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
-            <label className="tf-label">Дата</label>
-            <input className="tf-input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
-            <label className="tf-label">Заметка (необязательно)</label>
-            <input className="tf-input" value={form.note} onChange={e => set('note', e.target.value)} placeholder="Комментарий…" />
-          </div>
-        </div>
+        )}
 
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button className="tf-btn tf-btn--ghost" onClick={onClose}>Отмена</button>
@@ -802,7 +894,10 @@ function AddTransactionModal({ accounts, onSave, onClose }) {
       title="Новая операция"
       initial={{
         label: '', amount: '', cat: 'food', type: 'expense',
-        accountId: accounts[0]?.id || '', date: new Date().toISOString().split('T')[0], note: '',
+        accountId: accounts[0]?.id || '',
+        fromAccountId: accounts[0]?.id || '',
+        toAccountId: accounts[1]?.id || '',
+        date: new Date().toISOString().split('T')[0], note: '',
       }}
       accounts={accounts}
       onSave={tx => onSave({ id: uid(), ...tx })}
@@ -1894,6 +1989,20 @@ function reducer(state, action) {
       );
       return { ...state, transactions: [tx, ...state.transactions], accounts };
     }
+    case 'TRANSFER_TX': {
+      const { id, fromAccountId, toAccountId, amount, date, note, label } = action.payload;
+      // Debit from source, credit to destination
+      const accounts = state.accounts.map(a => {
+        if (a.id === fromAccountId) return { ...a, balance: a.balance - amount };
+        if (a.id === toAccountId)   return { ...a, balance: a.balance + amount };
+        return a;
+      });
+      const fromAcc = state.accounts.find(a => a.id === fromAccountId);
+      const toAcc   = state.accounts.find(a => a.id === toAccountId);
+      const txOut = { id: id + '_out', label: label || 'Перевод', cat: 'savings', amount: -amount, date, accountId: fromAccountId, note: note || '', transfer: true, transferPeer: toAccountId };
+      const txIn  = { id: id + '_in',  label: label || 'Перевод', cat: 'savings', amount: +amount, date, accountId: toAccountId,   note: note || '', transfer: true, transferPeer: fromAccountId };
+      return { ...state, transactions: [txOut, txIn, ...state.transactions], accounts };
+    }
     case 'DELETE_TX': {
       const tx = state.transactions.find(t => t.id === action.payload);
       const accounts = tx ? state.accounts.map(a =>
@@ -1980,8 +2089,15 @@ function App() {
   }, [theme]);
 
   const handleAddTx = (tx) => {
-    dispatch({ type: 'ADD_TX', payload: tx });
-    setToast(`Добавлено: ${tx.label}`);
+    if (tx.type === 'transfer') {
+      dispatch({ type: 'TRANSFER_TX', payload: tx });
+      const fromAcc = data.accounts.find(a => a.id === tx.fromAccountId);
+      const toAcc   = data.accounts.find(a => a.id === tx.toAccountId);
+      setToast(`Перевод: ${fromAcc?.label || '?'} → ${toAcc?.label || '?'}`);
+    } else {
+      dispatch({ type: 'ADD_TX', payload: tx });
+      setToast(`Добавлено: ${tx.label}`);
+    }
   };
 
   const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
