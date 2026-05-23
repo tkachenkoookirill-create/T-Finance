@@ -347,18 +347,18 @@ function seedData() {
       { id: 'invest', label: 'Инвестиционный', type: 'invest', currency: 'UZS', balance: 23600000, color: 'var(--c5)', last4: '0341' },
     ],
     transactions: [
-      { id: 't1', label: 'Зарплата', cat: 'salary', amount: 15000000, date: today, time: '09:00', accountId: 'main', note: '' },
-      { id: 't2', label: 'Korzinka', cat: 'food', amount: -145000, date: today, time: '14:08', accountId: 'main', note: '', icon: '🛒' },
-      { id: 't3', label: 'Яндекс Go', cat: 'transport', amount: -28000, date: today, time: '08:30', accountId: 'main', note: '' },
-      { id: 't4', label: 'Kafe Samarkand', cat: 'food', amount: -186000, date: yesterday, time: '13:20', accountId: 'main', note: '' },
-      { id: 't5', label: 'Netflix', cat: 'services', amount: -89000, date: yesterday, time: '11:00', accountId: 'main', note: '', icon: '🎬', recurring: true },
-      { id: 't6', label: 'Аренда', cat: 'rent', amount: -2800000, date: d2, time: '09:00', accountId: 'main', note: '', icon: '🏠', recurring: true },
-      { id: 't7', label: 'Пополнение накопит.', cat: 'transfer', amount: -2000000, date: d2, time: '10:00', accountId: 'main', note: '' },
-      { id: 't8', label: 'Пополнение накопит.', cat: 'transfer', amount: 2000000, date: d2, time: '10:00', accountId: 'savings', note: '' },
-      { id: 't9', label: 'Gym fit', cat: 'healthcare', amount: -350000, date: d3, time: '18:00', accountId: 'main', note: '', icon: '🏋️', recurring: true },
-      { id: 't10', label: 'Дивиденды', cat: 'dividends', amount: 480000, date: d7, time: '10:00', accountId: 'invest', note: '' },
-      { id: 't11', label: 'O\'zbekiston Airways', cat: 'entertainment', amount: -1200000, date: d7, time: '15:30', accountId: 'main', note: '✈️ Билеты Ташкент-Стамбул' },
-      { id: 't12', label: 'UCell', cat: 'services', amount: -45000, date: d14, time: '08:00', accountId: 'main', note: '', recurring: true },
+      { id: 't1', label: 'Зарплата', cat: 'salary', amount: 15000000, date: today, accountId: 'main', note: '' },
+      { id: 't2', label: 'Korzinka', cat: 'food', amount: -145000, date: today, accountId: 'main', note: '' },
+      { id: 't3', label: 'Яндекс Go', cat: 'transport', amount: -28000, date: today, accountId: 'main', note: '' },
+      { id: 't4', label: 'Kafe Samarkand', cat: 'restaurants', amount: -186000, date: yesterday, accountId: 'main', note: '' },
+      { id: 't5', label: 'Netflix', cat: 'services', amount: -89000, date: yesterday, accountId: 'main', note: '', recurring: true },
+      { id: 't6', label: 'Аренда', cat: 'rent', amount: -2800000, date: d2, accountId: 'main', note: '', recurring: true },
+      { id: 't7', label: 'Пополнение накопит.', cat: 'savings', amount: -2000000, date: d2, accountId: 'main', note: '' },
+      { id: 't8', label: 'Пополнение накопит.', cat: 'savings', amount: 2000000, date: d2, accountId: 'savings', note: '' },
+      { id: 't9', label: 'Gym fit', cat: 'healthcare', amount: -350000, date: d3, accountId: 'main', note: '', recurring: true },
+      { id: 't10', label: 'Дивиденды', cat: 'dividends', amount: 480000, date: d7, accountId: 'invest', note: '' },
+      { id: 't11', label: 'O\'zbekiston Airways', cat: 'travel', amount: -1200000, date: d7, accountId: 'main', note: 'Билеты Ташкент-Стамбул' },
+      { id: 't12', label: 'UCell', cat: 'telecom', amount: -45000, date: d14, accountId: 'main', note: '', recurring: true },
     ],
     portfolio: [
       { id: 'p1', ticker: 'AAPL', name: 'Apple', qty: 8, avgPrice: 185.40, currentPrice: 189.60, currency: 'USD', color: 'var(--c1)' },
@@ -386,17 +386,24 @@ function seedData() {
 // HELPERS
 // ─────────────────────────────────────────────────────────────
 const CATS = {
-  salary: { label: 'Зарплата', icon: '💼', color: 'var(--pos)' },
-  food: { label: 'Еда', icon: '🍽️', color: 'var(--c2)' },
-  transport: { label: 'Транспорт', icon: '🚗', color: 'var(--c3)' },
-  rent: { label: 'Аренда', icon: '🏠', color: 'var(--c1)' },
-  entertainment: { label: 'Развлечения', icon: '🎭', color: 'var(--c4)' },
-  services: { label: 'Сервисы', icon: '📱', color: 'var(--c5)' },
-  healthcare: { label: 'Здоровье', icon: '💊', color: 'var(--c6)' },
-  dividends: { label: 'Дивиденды', icon: '📈', color: 'var(--pos)' },
-  transfer: { label: 'Перевод', icon: '⇆', color: 'var(--ink-3)' },
-  freelance: { label: 'Фриланс', icon: '💻', color: 'var(--brand)' },
-  other: { label: 'Прочее', icon: '📌', color: 'var(--c7)' },
+  salary:        { label: 'Основная зарплата',      icon: '', color: 'var(--pos)' },
+  freelance:     { label: 'Подработка',              icon: '', color: 'var(--brand)' },
+  dividends:     { label: 'Дивиденды',               icon: '', color: 'var(--pos)' },
+  income_other:  { label: 'Прочие доходы',           icon: '', color: 'var(--c6)' },
+  rent:          { label: 'Аренда / ипотека',        icon: '', color: 'var(--c1)' },
+  food:          { label: 'Продукты',                icon: '', color: 'var(--c2)' },
+  transport:     { label: 'Транспорт',               icon: '', color: 'var(--c3)' },
+  utilities:     { label: 'Коммунальные услуги',     icon: '', color: 'var(--c6)' },
+  telecom:       { label: 'Связь / интернет',        icon: '', color: 'var(--c5)' },
+  restaurants:   { label: 'Рестораны / кафе',        icon: '', color: 'var(--c4)' },
+  clothes:       { label: 'Одежда / обувь',          icon: '', color: 'var(--plum)' },
+  healthcare:    { label: 'Здоровье / медицина',     icon: '', color: 'var(--c6)' },
+  education:     { label: 'Образование',             icon: '', color: 'var(--c2)' },
+  entertainment: { label: 'Развлечения',             icon: '', color: 'var(--c4)' },
+  travel:        { label: 'Путешествия',             icon: '', color: 'var(--c3)' },
+  savings:       { label: 'Сбережения / инвестиции', icon: '', color: 'var(--brand)' },
+  services:      { label: 'Сервисы',                 icon: '', color: 'var(--c5)' },
+  other:         { label: 'Прочие расходы',          icon: '', color: 'var(--c7)' },
 };
 
 function fmt(n, cur = 'UZS', dec = 0) {
@@ -676,24 +683,31 @@ function Topbar({ title, theme, onThemeToggle, onAdd }) {
   );
 }
 
-function TxnRow({ tx, cur, onDelete }) {
+function TxnRow({ tx, cur, onDelete, onEdit }) {
   const cat = CATS[tx.cat] || CATS.other;
   const isInflow = tx.amount > 0;
+  const cols = onDelete || onEdit ? '36px 1fr auto auto auto' : '36px 1fr auto';
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr auto auto', gap: 12, alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line-2)' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: cols, gap: 12, alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--line-2)' }}>
       <div style={{
         width: 32, height: 32, borderRadius: 8,
         background: isInflow ? 'color-mix(in oklch, var(--pos) 14%, transparent)' : 'var(--bg-sunken)',
         color: isInflow ? 'var(--pos)' : 'var(--ink-2)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
-      }}>{tx.icon || cat.icon}</div>
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700,
+        flexShrink: 0,
+      }}>{isInflow ? '+' : '−'}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
         <span style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tx.label}</span>
-        <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>{cat.label} · {tx.time}</span>
+        <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>{cat.label}</span>
       </div>
       <span className="tf-mono tf-tnum" style={{ fontWeight: 600, color: isInflow ? 'var(--pos)' : 'var(--ink)', fontSize: 13 }}>
         {isInflow ? '+' : '−'}{fmtAbs(tx.amount, cur)}
       </span>
+      {onEdit && (
+        <button onClick={() => onEdit(tx)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', width: 20, height: 20, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.edit}</span>
+        </button>
+      )}
       {onDelete && (
         <button onClick={() => onDelete(tx.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', width: 20, height: 20, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ width: 14, height: 14, display: 'inline-flex' }}>{Ico.trash}</span>
@@ -706,29 +720,16 @@ function TxnRow({ tx, cur, onDelete }) {
 // ─────────────────────────────────────────────────────────────
 // ADD TRANSACTION MODAL
 // ─────────────────────────────────────────────────────────────
-function AddTransactionModal({ accounts, onSave, onClose }) {
-  const [form, setForm] = useState({
-    label: '', amount: '', cat: 'food', type: 'expense',
-    accountId: accounts[0]?.id || '', date: new Date().toISOString().split('T')[0],
-    time: new Date().toTimeString().slice(0, 5), note: '',
-  });
-
+// Shared form UI for Add & Edit modals
+function TxnFormModal({ title, initial, accounts, onSave, onClose }) {
+  const [form, setForm] = useState(initial);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleSave = () => {
     if (!form.label || !form.amount) return;
-    const amt = parseFloat(form.amount.replace(/\s/g, '').replace(',', '.'));
+    const amt = parseFloat(String(form.amount).replace(/\s/g, '').replace(',', '.'));
     if (isNaN(amt)) return;
-    onSave({
-      id: uid(),
-      label: form.label,
-      amount: form.type === 'expense' ? -Math.abs(amt) : Math.abs(amt),
-      cat: form.cat,
-      accountId: form.accountId,
-      date: form.date,
-      time: form.time,
-      note: form.note,
-    });
+    onSave({ ...form, amount: form.type === 'expense' ? -Math.abs(amt) : Math.abs(amt) });
     onClose();
   };
 
@@ -736,7 +737,7 @@ function AddTransactionModal({ accounts, onSave, onClose }) {
     <div className="tf-modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="tf-modal">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Новая операция</div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>{title}</div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-3)', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Ico.close}</span>
           </button>
@@ -767,7 +768,7 @@ function AddTransactionModal({ accounts, onSave, onClose }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             <label className="tf-label">Категория</label>
             <select className="tf-select" value={form.cat} onChange={e => set('cat', e.target.value)}>
-              {Object.entries(CATS).map(([k, v]) => <option key={k} value={k}>{v.icon} {v.label}</option>)}
+              {Object.entries(CATS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
             </select>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -776,13 +777,9 @@ function AddTransactionModal({ accounts, onSave, onClose }) {
               {accounts.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
             </select>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
             <label className="tf-label">Дата</label>
             <input className="tf-input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <label className="tf-label">Время</label>
-            <input className="tf-input" type="time" value={form.time} onChange={e => set('time', e.target.value)} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
             <label className="tf-label">Заметка (необязательно)</label>
@@ -796,6 +793,41 @@ function AddTransactionModal({ accounts, onSave, onClose }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function AddTransactionModal({ accounts, onSave, onClose }) {
+  return (
+    <TxnFormModal
+      title="Новая операция"
+      initial={{
+        label: '', amount: '', cat: 'food', type: 'expense',
+        accountId: accounts[0]?.id || '', date: new Date().toISOString().split('T')[0], note: '',
+      }}
+      accounts={accounts}
+      onSave={tx => onSave({ id: uid(), ...tx })}
+      onClose={onClose}
+    />
+  );
+}
+
+function EditTransactionModal({ tx, accounts, onSave, onClose }) {
+  return (
+    <TxnFormModal
+      title="Редактировать операцию"
+      initial={{
+        label: tx.label,
+        amount: Math.abs(tx.amount),
+        cat: tx.cat,
+        type: tx.amount >= 0 ? 'income' : 'expense',
+        accountId: tx.accountId,
+        date: tx.date,
+        note: tx.note || '',
+      }}
+      accounts={accounts}
+      onSave={updated => onSave({ ...tx, ...updated })}
+      onClose={onClose}
+    />
   );
 }
 
@@ -849,7 +881,7 @@ function Overview({ data, onNav }) {
     }));
   }, [monthTxs]);
 
-  const recentTxs = [...transactions].sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time)).slice(0, 5);
+  const recentTxs = [...transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
 
   // Monthly spend last 6 months
   const monthlySpend = useMemo(() => {
@@ -1127,12 +1159,13 @@ function Accounts({ data, dispatch }) {
 // HISTORY SCREEN
 // ─────────────────────────────────────────────────────────────
 function History({ data, dispatch }) {
-  const { transactions, settings } = data;
+  const { transactions, accounts, settings } = data;
   const cur = settings.currency;
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [editingTx, setEditingTx] = useState(null);
 
-  const sorted = useMemo(() => [...transactions].sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time)), [transactions]);
+  const sorted = useMemo(() => [...transactions].sort((a, b) => b.date.localeCompare(a.date)), [transactions]);
 
   const filtered = useMemo(() => {
     let tx = sorted;
@@ -1153,8 +1186,12 @@ function History({ data, dispatch }) {
     { v: 'all', l: 'Все' },
     { v: 'income', l: '↓ Доходы' },
     { v: 'expense', l: '↑ Расходы' },
-    ...Object.entries(CATS).slice(0, 6).map(([k, v]) => ({ v: k, l: v.icon + ' ' + v.label })),
+    ...Object.entries(CATS).slice(0, 6).map(([k, v]) => ({ v: k, l: v.label })),
   ];
+
+  const handleEdit = (updated) => {
+    dispatch({ type: 'EDIT_TX', payload: updated });
+  };
 
   return (
     <div className="tf-content" style={{ overflowY: 'auto' }}>
@@ -1165,7 +1202,7 @@ function History({ data, dispatch }) {
         </div>
       </div>
 
-      <input className="tf-input" value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍  Поиск по операциям…" style={{ maxWidth: 400 }} />
+      <input className="tf-input" value={search} onChange={e => setSearch(e.target.value)} placeholder="Поиск по операциям…" style={{ maxWidth: 400 }} />
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {filterOpts.map(o => (
@@ -1183,11 +1220,23 @@ function History({ data, dispatch }) {
                 {fmt(sum, cur)}
               </span>
             </div>
-            {items.map(tx => <TxnRow key={tx.id} tx={tx} cur={cur} onDelete={id => dispatch({ type: 'DELETE_TX', payload: id })} />)}
+            {items.map(tx => <TxnRow key={tx.id} tx={tx} cur={cur}
+              onDelete={id => dispatch({ type: 'DELETE_TX', payload: id })}
+              onEdit={tx => setEditingTx(tx)}
+            />)}
           </div>
         );
       })}
       {Object.keys(groups).length === 0 && <div style={{ color: 'var(--ink-3)', textAlign: 'center', padding: '48px 0', fontSize: 14 }}>Нет операций</div>}
+
+      {editingTx && (
+        <EditTransactionModal
+          tx={editingTx}
+          accounts={accounts}
+          onSave={handleEdit}
+          onClose={() => setEditingTx(null)}
+        />
+      )}
     </div>
   );
 }
@@ -1851,6 +1900,25 @@ function reducer(state, action) {
         a.id === tx.accountId ? { ...a, balance: a.balance - tx.amount } : a
       ) : state.accounts;
       return { ...state, transactions: state.transactions.filter(t => t.id !== action.payload), accounts };
+    }
+    case 'EDIT_TX': {
+      const updated = action.payload;
+      const old = state.transactions.find(t => t.id === updated.id);
+      // Revert old amount from old account, apply new amount to new account
+      let accounts = state.accounts;
+      if (old) {
+        accounts = accounts.map(a =>
+          a.id === old.accountId ? { ...a, balance: a.balance - old.amount } : a
+        );
+      }
+      accounts = accounts.map(a =>
+        a.id === updated.accountId ? { ...a, balance: a.balance + updated.amount } : a
+      );
+      return {
+        ...state,
+        transactions: state.transactions.map(t => t.id === updated.id ? updated : t),
+        accounts,
+      };
     }
     case 'ADD_ACCOUNT':
       return { ...state, accounts: [...state.accounts, action.payload] };
