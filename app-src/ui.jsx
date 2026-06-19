@@ -56,9 +56,9 @@ const CAT_EMOJI = {
   // доходы
   salary: "💼", freelance: "💻", dividends: "📈", other_income: "💰",
   // расходы
-  rent: "🏠", food: "🛒", transport: "🚇", utilities: "💡", communication: "📶",
-  restaurants: "🍽️", clothing: "👕", healthcare: "💊", sport: "🏋️", education: "🎓",
-  entertainment: "🎬", travel: "✈️", other: "•", services: "🔁",
+  rent: "🏠", food: "🛒", taxi: "🚕", transport: "🚇", utilities: "💡", communication: "📶",
+  restaurants: "🍽️", clothing: "👕", healthcare: "💊", gym: "🏋️", sport: "⚽", education: "🎓",
+  entertainment: "🎬", travel: "✈️", other: "•", services: "💻",
   transfer: "↔",
 };
 

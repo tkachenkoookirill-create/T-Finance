@@ -209,7 +209,17 @@ function AddTransaction({ go, onDone }) {
         <div className="row add-form-row" style={{ gap: 12, alignItems: "stretch" }}>
           <div className="field" style={{ flex: 1 }}>
             <label>Описание</label>
-            <input className="input" placeholder={dir === "income" ? "Напр. Зарплата" : "Напр. Пятёрочка"} value={merchant} onChange={(e) => setMerchant(e.target.value)} />
+            <input className="input" placeholder={
+              dir === "income" ? "Напр. Зарплата" :
+              cat === "taxi" ? "Напр. Яндекс Go, InDriver, Uber" :
+              cat === "transport" ? "Напр. маршрут 45, метро" :
+              cat === "restaurants" ? "Напр. Coffee House, Dono Kebab" :
+              cat === "services" ? "Напр. Claude, ChatGPT, Tilda, Netflix" :
+              cat === "gym" ? "Напр. абонемент, тренер, протеин" :
+              cat === "healthcare" ? "Напр. аптека, Аман Медикал, Инвитро" :
+              cat === "food" ? "Напр. Korzinka, Macro" :
+              "Напр. название места или товара"
+            } value={merchant} onChange={(e) => setMerchant(e.target.value)} />
           </div>
           <div className="field" style={{ width: 170 }}>
             <label>Дата</label>
