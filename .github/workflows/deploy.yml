@@ -38,6 +38,7 @@ jobs:
           cp app-src/icon-512.png _site/icon-512.png
           cp sw.js _site/sw.js
           cp manifest.json _site/manifest.json
+          cp _site/index.html _site/404.html
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
