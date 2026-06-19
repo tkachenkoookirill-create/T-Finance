@@ -18,9 +18,10 @@ export function Logo({ size = 22, mark = false }: { size?: number; mark?: boolea
   );
 }
 
-export function Card({ className, children, flush = false }: { className?: string; children: React.ReactNode; flush?: boolean }) {
+export function Card({ className, children, flush = false, style }: { className?: string; children: React.ReactNode; flush?: boolean; style?: React.CSSProperties }) {
   return (
     <div
+      style={style}
       className={clsx(
         "bg-bg-elev border border-line rounded-md flex flex-col gap-3",
         flush ? "" : "p-5",
