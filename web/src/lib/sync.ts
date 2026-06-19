@@ -3,6 +3,7 @@
 const SUPABASE_URL  = "https://vimxepexjtstnfugbptx.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpbXhlcGV4anRzdG5mdWdicHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4ODE5MjMsImV4cCI6MjA5NzQ1NzkyM30.EzCoKGn55Dxi44dGra5uBcn8o3zzDl14u0rXK0m-j9U";
 
+const FIXED_SYNC_ID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
 const SYNC_ID_KEY = "tf_sync_id";
 const SYNC_TS_KEY = "tf_sync_ts";
 const DATA_KEYS = [
@@ -11,12 +12,7 @@ const DATA_KEYS = [
 ];
 
 function getSyncId(): string {
-  let id = localStorage.getItem(SYNC_ID_KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(SYNC_ID_KEY, id);
-  }
-  return id;
+  return FIXED_SYNC_ID;
 }
 
 function collect(): Record<string, string> {
