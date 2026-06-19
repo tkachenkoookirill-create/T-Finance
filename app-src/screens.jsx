@@ -142,6 +142,88 @@ window.CAT_PRESETS = {
   taxi:         ["YandexGO", "WB Taxi"],
 };
 
+// ── Пользовательские пресеты (сохраняются в localStorage) ──
+function loadCustomPresets() {
+  try { return JSON.parse(localStorage.getItem("tf_custom_presets") || "{}"); } catch { return {}; }
+}
+function saveCustomPresets(data) {
+  localStorage.setItem("tf_custom_presets", JSON.stringify(data));
+}
+
+function PresetPicker({ cat, merchant, setMerchant }) {
+  const [custom, setCustom] = React.useState(loadCustomPresets);
+  const [adding, setAdding] = React.useState(false);
+  const [draft, setDraft] = React.useState("");
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => { if (adding && inputRef.current) inputRef.current.focus(); }, [adding]);
+
+  const defaults = window.CAT_PRESETS[cat] || [];
+  const mine = custom[cat] || [];
+  const all = [...defaults, ...mine.filter((p) => !defaults.includes(p))];
+
+  if (!all.length && !window.CAT_PRESETS[cat]) return null;
+
+  function addCustom() {
+    const val = draft.trim();
+    if (!val) { setAdding(false); return; }
+    const next = { ...custom, [cat]: [...(custom[cat] || []).filter((p) => p !== val), val] };
+    saveCustomPresets(next);
+    setCustom(next);
+    setMerchant(val);
+    setDraft("");
+    setAdding(false);
+  }
+
+  function removeCustom(p) {
+    const next = { ...custom, [cat]: (custom[cat] || []).filter((x) => x !== p) };
+    saveCustomPresets(next);
+    setCustom(next);
+    if (merchant === p) setMerchant("");
+  }
+
+  return (
+    <div className="field">
+      <label>Быстрый выбор</label>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 7, alignItems: "center" }}>
+        {all.map((p) => {
+          const isDefault = defaults.includes(p);
+          const active = merchant === p;
+          return (
+            <span key={p} style={{ display: "inline-flex", alignItems: "center", gap: 0 }}>
+              <button type="button" onClick={() => setMerchant(active ? "" : p)}
+                className="btn sm"
+                style={{ borderColor: active ? "var(--brand)" : "var(--line)", background: active ? "var(--brand-tint)" : "var(--bg-elev)", color: active ? "var(--brand-ink)" : "var(--ink-2)", fontWeight: active ? 700 : 500, borderRadius: isDefault ? "var(--r-sm)" : "var(--r-sm) 0 0 var(--r-sm)", borderRight: isDefault ? "" : "none" }}>
+                {p}
+              </button>
+              {!isDefault && (
+                <button type="button" onClick={() => removeCustom(p)}
+                  className="btn sm"
+                  style={{ padding: "0 7px", borderRadius: "0 var(--r-sm) var(--r-sm) 0", color: "var(--ink-4)", borderColor: active ? "var(--brand)" : "var(--line)", background: active ? "var(--brand-tint)" : "var(--bg-elev)" }}
+                  title="Удалить">×</button>
+              )}
+            </span>
+          );
+        })}
+        {adding ? (
+          <span style={{ display: "inline-flex", gap: 5 }}>
+            <input ref={inputRef} className="input" value={draft} onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") addCustom(); if (e.key === "Escape") { setAdding(false); setDraft(""); } }}
+              placeholder="Своё название…"
+              style={{ height: 32, width: 160, fontSize: 13, padding: "0 10px" }} />
+            <button type="button" className="btn sm" onClick={addCustom} style={{ background: "var(--brand)", color: "var(--on-brand)", border: "none" }}>OK</button>
+            <button type="button" className="btn sm" onClick={() => { setAdding(false); setDraft(""); }}>✕</button>
+          </span>
+        ) : (
+          <button type="button" className="btn sm" onClick={() => setAdding(true)}
+            style={{ color: "var(--ink-4)", borderStyle: "dashed" }}>+ своё</button>
+        )}
+      </div>
+    </div>
+  );
+}
+window.PresetPicker = PresetPicker;
+
 function AddTransaction({ go, onDone }) {
   const accounts = S.getAccounts();
   const [dir, setDir] = useState("expense"); // expense | income
@@ -214,20 +296,7 @@ function AddTransaction({ go, onDone }) {
           </div>
         </div>
 
-        {window.CAT_PRESETS[cat] && (
-          <div className="field">
-            <label>Быстрый выбор</label>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-              {window.CAT_PRESETS[cat].map((p) => (
-                <button key={p} type="button" onClick={() => setMerchant(p)}
-                  className="btn sm"
-                  style={{ borderColor: merchant === p ? "var(--brand)" : "var(--line)", background: merchant === p ? "var(--brand-tint)" : "var(--bg-elev)", color: merchant === p ? "var(--brand-ink)" : "var(--ink-2)", fontWeight: merchant === p ? 700 : 500 }}>
-                  {p}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        <PresetPicker cat={cat} merchant={merchant} setMerchant={setMerchant} />
 
         <div className="row add-form-row" style={{ gap: 12, alignItems: "stretch" }}>
           <div className="field" style={{ flex: 1 }}>
