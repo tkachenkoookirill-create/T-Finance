@@ -236,7 +236,7 @@ function AddTransaction({ go, onDone }) {
   const amtRef = useRef(null);
   useEffect(() => { amtRef.current && amtRef.current.focus(); }, []);
 
-  const cats = S.CATEGORIES.filter((c) => c.kind === (dir === "income" ? "income" : "expense"));
+  const cats = S.CATEGORIES.filter((c) => c.kind === (dir === "income" ? "income" : "expense") && !c.hidden);
   useEffect(() => { if (!cats.find((c) => c.key === cat)) setCat(cats[0].key); }, [dir]);
 
   const minor = parseAmount(amount);
@@ -304,6 +304,7 @@ function AddTransaction({ go, onDone }) {
             <input className="input" placeholder={
               dir === "income" ? "Напр. Зарплата" :
               cat === "taxi" ? "Напр. Яндекс Go, InDriver, Uber" :
+              cat === "taxi" ? "Напр. YandexGO, WB Taxi" :
               cat === "transport" ? "Напр. маршрут 45, метро" :
               cat === "restaurants" ? "Напр. Coffee House, Dono Kebab" :
               cat === "services" ? "Напр. Claude, ChatGPT, Tilda, Netflix" :

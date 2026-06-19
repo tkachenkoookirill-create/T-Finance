@@ -35,6 +35,7 @@
     { key: "clothing",      label: "Одежда / обувь",      color: "var(--c5)", kind: "expense", essential: false, impulse: true  },
     { key: "healthcare",    label: "Здоровье / медицина", color: "var(--c6)", kind: "expense", essential: true,  impulse: false },
     { key: "gym",           label: "Спортзал",            color: "var(--c1)", kind: "expense", essential: false, impulse: false },
+    { key: "sport",         label: "Спорт",               color: "var(--c1)", kind: "expense", essential: false, impulse: false, hidden: true },
     { key: "education",     label: "Образование",         color: "var(--c2)", kind: "expense", essential: false, impulse: false },
     { key: "entertainment", label: "Развлечения",         color: "var(--c4)", kind: "expense", essential: false, impulse: true  },
     { key: "travel",        label: "Путешествия",         color: "var(--c2)", kind: "expense", essential: false, impulse: true  },

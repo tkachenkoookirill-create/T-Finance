@@ -206,7 +206,7 @@ function EditTxModal({ tx, accounts, onClose, refresh }) {
   const [note, setNote] = useState(tx.note || "");
   const [date, setDate] = useState(inputDate(tx.occurred_at));
 
-  const cats = S2.CATEGORIES.filter((c) => c.kind === (dir === "income" ? "income" : "expense"));
+  const cats = S2.CATEGORIES.filter((c) => c.kind === (dir === "income" ? "income" : "expense") && !c.hidden);
   useEffect(() => { if (!cats.find((c) => c.key === cat)) setCat(cats[0].key); }, [dir]);
 
   const minor = parseAmount(amount);
