@@ -27,6 +27,7 @@ function load<T>(key: string, fallback: T): T {
 function save(key: string, val: unknown) {
   if (!isClient) return;
   window.localStorage.setItem(key, JSON.stringify(val));
+  if (typeof window.__tfSchedulePush === "function") window.__tfSchedulePush();
 }
 function nextId<T extends { id: number }>(rows: T[]) {
   return rows.reduce((m, r) => Math.max(m, r.id), 0) + 1;
