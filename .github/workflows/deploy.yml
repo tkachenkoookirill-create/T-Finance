@@ -1,4 +1,4 @@
-name: Deploy web to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -17,25 +17,31 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20" }
-      - name: Install
-        run: npm ci || npm install
-      - name: Build
-        env:
-          # Sets basePath/assetPrefix so the site works at https://<user>.github.io/<repo>/
-          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - name: Prepare site
         run: |
-          npm run build
-          touch out/.nojekyll
+          mkdir -p _site
+          cp "T-Finance App (standalone).html" _site/index.html
+          cp app-src/supabase-sync.js _site/supabase-sync.js
+          cp app-src/store.js _site/store.js
+          cp app-src/app.css _site/app.css
+          cp app-src/main.jsx _site/main.jsx
+          cp app-src/screens.jsx _site/screens.jsx
+          cp app-src/screens2.jsx _site/screens2.jsx
+          cp app-src/screens3.jsx _site/screens3.jsx
+          cp app-src/analytics.jsx _site/analytics.jsx
+          cp app-src/analytics2.jsx _site/analytics2.jsx
+          cp app-src/analytics3.jsx _site/analytics3.jsx
+          cp app-src/ui.jsx _site/ui.jsx
+          cp app-src/icon-192.png _site/icon-192.png
+          cp app-src/icon-512.png _site/icon-512.png
+          cp sw.js _site/sw.js
+          cp manifest.json _site/manifest.json
+          touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: web/out
+          path: _site
 
   deploy:
     needs: build
