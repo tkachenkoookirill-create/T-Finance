@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SyncInit } from "@/components/sync-init";
 
 export const metadata: Metadata = {
   title: "T-Finance",
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body><SyncInit />{children}</body>
     </html>
   );
 }
