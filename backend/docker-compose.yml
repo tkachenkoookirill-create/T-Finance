@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tfinance-db
+    environment:
+      POSTGRES_USER: tfinance
+      POSTGRES_PASSWORD: tfinance
+      POSTGRES_DB: tfinance
+    ports:
+      - "5432:5432"
+    volumes:
+      - tfinance_pgdata:/var/lib/postgresql/data
+
+volumes:
+  tfinance_pgdata:

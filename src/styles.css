@@ -1,0 +1,277 @@
+/* ─────────────────────────────────────────────────────────────
+   T-Finance · Design Tokens
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Type */
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+
+  /* Light theme (default) — warm off-white */
+  --bg: oklch(98.5% 0.004 80);
+  --bg-elev: oklch(100% 0 0);
+  --bg-sunken: oklch(96% 0.005 80);
+  --ink: oklch(20% 0.012 250);
+  --ink-2: oklch(40% 0.012 250);
+  --ink-3: oklch(58% 0.01 250);
+  --ink-4: oklch(78% 0.008 250);
+  --line: oklch(91% 0.005 250);
+  --line-2: oklch(95% 0.004 250);
+
+  /* Brand — deep forest (growth/trust) */
+  --brand: oklch(36% 0.08 155);
+  --brand-2: oklch(46% 0.10 155);
+  --brand-tint: oklch(94% 0.025 155);
+  --brand-ink: oklch(20% 0.05 155);
+
+  /* Data accents — all share chroma 0.15 */
+  --pos: oklch(58% 0.15 150);     /* gain */
+  --neg: oklch(60% 0.18 25);      /* loss */
+  --warn: oklch(72% 0.15 75);     /* warning amber */
+  --info: oklch(58% 0.13 240);    /* info blue */
+  --plum: oklch(50% 0.13 320);    /* category accent */
+
+  /* Category palette for charts */
+  --c1: oklch(56% 0.12 155);
+  --c2: oklch(60% 0.13 240);
+  --c3: oklch(62% 0.14 65);
+  --c4: oklch(58% 0.14 25);
+  --c5: oklch(55% 0.13 320);
+  --c6: oklch(60% 0.10 200);
+  --c7: oklch(50% 0.05 250);
+
+  /* Radii, shadow, spacing */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  --shadow-1: 0 1px 0 oklch(20% 0.012 250 / 0.04), 0 0 0 1px oklch(20% 0.012 250 / 0.04);
+  --shadow-2: 0 1px 2px oklch(20% 0.012 250 / 0.06), 0 0 0 1px oklch(20% 0.012 250 / 0.06);
+  --shadow-3: 0 8px 24px -8px oklch(20% 0.012 250 / 0.16), 0 0 0 1px oklch(20% 0.012 250 / 0.06);
+
+  /* Density */
+  --gap: 16px;
+  --pad: 20px;
+  --row-h: 56px;
+  --hd: 64px;
+}
+
+[data-density="compact"] {
+  --gap: 10px;
+  --pad: 14px;
+  --row-h: 44px;
+  --hd: 52px;
+}
+
+[data-density="comfortable"] {
+  --gap: 20px;
+  --pad: 26px;
+  --row-h: 64px;
+  --hd: 72px;
+}
+
+[data-theme="dark"] {
+  --bg: oklch(18% 0.012 250);
+  --bg-elev: oklch(22% 0.014 250);
+  --bg-sunken: oklch(15% 0.012 250);
+  --ink: oklch(96% 0.005 80);
+  --ink-2: oklch(78% 0.008 250);
+  --ink-3: oklch(60% 0.01 250);
+  --ink-4: oklch(40% 0.012 250);
+  --line: oklch(28% 0.014 250);
+  --line-2: oklch(24% 0.014 250);
+  --brand: oklch(68% 0.12 155);
+  --brand-2: oklch(58% 0.10 155);
+  --brand-tint: oklch(28% 0.04 155);
+  --brand-ink: oklch(92% 0.04 155);
+  --shadow-1: 0 0 0 1px oklch(100% 0 0 / 0.06);
+  --shadow-2: 0 1px 2px oklch(0% 0 0 / 0.4), 0 0 0 1px oklch(100% 0 0 / 0.06);
+  --shadow-3: 0 10px 30px -10px oklch(0% 0 0 / 0.5), 0 0 0 1px oklch(100% 0 0 / 0.06);
+}
+
+/* ────────── base ────────── */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-sunken);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+  letter-spacing: -0.005em;
+}
+
+/* The artboard root applies theme/density */
+.tf-app {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ────────── primitives ────────── */
+
+.tf-mono { font-family: var(--font-mono); font-feature-settings: 'tnum', 'zero'; }
+.tf-serif { font-family: var(--font-serif); font-weight: 400; }
+.tf-tnum { font-variant-numeric: tabular-nums; }
+
+.tf-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tf-card--flush { padding: 0; }
+.tf-card--ghost { background: transparent; border: 1px dashed var(--line); }
+.tf-card--ink { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tf-card--brand { background: var(--brand); color: oklch(98% 0.02 155); border-color: var(--brand); }
+
+.tf-h-eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.tf-h-section { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; margin: 0; }
+.tf-num-big { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.tf-num-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+.tf-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+  background: var(--bg-sunken); color: var(--ink-2);
+  border: 1px solid var(--line);
+  letter-spacing: 0;
+}
+.tf-pill--pos { background: color-mix(in oklch, var(--pos) 14%, transparent); color: var(--pos); border-color: color-mix(in oklch, var(--pos) 24%, transparent); }
+.tf-pill--neg { background: color-mix(in oklch, var(--neg) 14%, transparent); color: var(--neg); border-color: color-mix(in oklch, var(--neg) 24%, transparent); }
+.tf-pill--brand { background: var(--brand-tint); color: var(--brand); border-color: color-mix(in oklch, var(--brand) 24%, transparent); }
+.tf-pill--ink { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.tf-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px; border-radius: var(--r-sm);
+  background: var(--ink); color: var(--bg);
+  border: 1px solid var(--ink);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tf-btn--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.tf-btn--brand { background: var(--brand); color: oklch(98% 0.02 155); border-color: var(--brand); }
+.tf-btn--sm { height: 28px; padding: 0 10px; font-size: 12px; border-radius: 8px; }
+
+.tf-divider { height: 1px; background: var(--line); width: 100%; }
+.tf-divider--v { width: 1px; background: var(--line); align-self: stretch; }
+
+/* nav */
+.tf-sidebar {
+  width: 240px;
+  border-right: 1px solid var(--line);
+  background: var(--bg);
+  padding: 18px 14px;
+  display: flex; flex-direction: column; gap: 4px;
+  flex-shrink: 0;
+}
+.tf-sidebar__brand { display:flex; align-items:center; gap:10px; padding: 4px 8px 22px; }
+.tf-nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding: 8px 10px; border-radius: 8px;
+  font-size: 13px; color: var(--ink-2); font-weight: 500;
+  cursor: pointer;
+}
+.tf-nav-item--active { background: var(--bg-sunken); color: var(--ink); }
+.tf-nav-item__icon { width:16px; height:16px; color: var(--ink-3); flex-shrink:0; }
+.tf-nav-item--active .tf-nav-item__icon { color: var(--brand); }
+.tf-nav-group { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4); padding: 14px 10px 6px; font-weight: 700; }
+
+.tf-topbar {
+  height: var(--hd);
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  display:flex; align-items:center; gap: 16px;
+  flex-shrink: 0;
+}
+.tf-search {
+  flex: 1; max-width: 480px;
+  height: 36px; border-radius: 10px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  padding: 0 12px;
+  display:flex; align-items:center; gap: 8px;
+  color: var(--ink-3); font-size: 13px;
+}
+.tf-kbd {
+  font: 500 10px var(--font-mono);
+  padding: 2px 5px; border-radius: 4px;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  color: var(--ink-3); margin-left: auto;
+}
+
+.tf-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color: oklch(98% 0.02 155);
+  display:flex; align-items:center; justify-content:center;
+  font-weight: 700; font-size: 11px;
+  flex-shrink: 0;
+}
+
+.tf-content {
+  flex: 1; overflow: hidden;
+  padding: 28px 32px;
+  display: flex; flex-direction: column;
+  gap: var(--gap);
+}
+
+[data-density="compact"] .tf-content { padding: 16px 20px; }
+
+/* ────────── tables ────────── */
+
+.tf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tf-table th { text-align: left; font-weight: 600; color: var(--ink-3); padding: 10px 12px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--line); background: var(--bg-sunken); }
+.tf-table td { padding: 12px; border-bottom: 1px solid var(--line-2); color: var(--ink); vertical-align: middle; }
+.tf-table tr:last-child td { border-bottom: none; }
+
+/* ────────── mobile ────────── */
+.tf-mobile {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  width: 100%; height: 100%;
+  display:flex; flex-direction:column;
+  overflow: hidden;
+}
+.tf-mobile__hd { padding: 14px 18px 6px; display:flex; align-items:center; justify-content: space-between; }
+.tf-mobile__tab {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  background: var(--bg-elev);
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding: 8px 10px 26px;
+}
+.tf-mobile__tab > div { display:flex; flex-direction:column; align-items:center; gap: 4px; color: var(--ink-3); font-size: 10px; }
+.tf-mobile__tab > div.is-active { color: var(--ink); }
+
+/* ────────── chart helpers ────────── */
+.tf-chart-grid line { stroke: var(--line); }
+.tf-chart-axis { fill: var(--ink-3); font: 500 10px var(--font-mono); }
+
+/* Section markers in canvas */
+.tf-canvas-note { color: var(--ink-3); font-size: 12px; line-height: 1.5; max-width: 720px; }
+.tf-canvas-note b { color: var(--ink); }
+
+/* ────────── focus / hover micro ────────── */
+.tf-card:focus, .tf-btn:focus { outline: none; }
+
+/* Direction-agnostic */
+[lang="en"] .ru-only { display: none !important; }
+[lang="ru"] .en-only { display: none !important; }

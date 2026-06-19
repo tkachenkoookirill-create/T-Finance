@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>T-Finance · Что готово</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --bg: oklch(98.5% 0.004 80);
+  --bg-elev: oklch(100% 0 0);
+  --bg-sunken: oklch(96% 0.005 80);
+  --ink: oklch(20% 0.012 250);
+  --ink-2: oklch(40% 0.012 250);
+  --ink-3: oklch(58% 0.01 250);
+  --ink-4: oklch(78% 0.008 250);
+  --line: oklch(91% 0.005 250);
+  --line-2: oklch(95% 0.004 250);
+  --brand: oklch(36% 0.08 155);
+  --brand-2: oklch(46% 0.10 155);
+  --brand-tint: oklch(94% 0.025 155);
+  --pos: oklch(58% 0.15 150);
+  --neg: oklch(60% 0.18 25);
+  --warn: oklch(72% 0.15 75);
+  --c2: oklch(60% 0.13 240);
+  --c5: oklch(55% 0.13 320);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--font-sans); background: var(--bg-sunken); color: var(--ink); letter-spacing: -0.005em; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 56px 32px 96px; }
+
+.eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.logo { display: inline-flex; align-items: center; gap: 10px; }
+.logo-word { font-family: var(--font-serif); font-size: 22px; letter-spacing: -0.02em; }
+.logo-word b { font-family: var(--font-sans); font-weight: 700; font-size: 16px; letter-spacing: -0.02em; }
+
+h1 { font-family: var(--font-serif); font-weight: 400; font-size: 84px; line-height: 0.93; letter-spacing: -0.035em; margin: 22px 0 0; max-width: 13ch; }
+h1 i { font-style: italic; color: var(--brand); }
+.lede { color: var(--ink-2); font-size: 18px; max-width: 60ch; margin-top: 22px; line-height: 1.55; }
+
+section { margin-top: 56px; }
+.section-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+.section-hd h2 { font-family: var(--font-serif); font-weight: 400; font-size: 36px; letter-spacing: -0.02em; margin: 0; }
+.section-hd p { color: var(--ink-3); font-size: 14px; max-width: 40ch; margin: 0; text-align: right; }
+
+.card { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+.kicker { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.num { font-family: var(--font-serif); font-size: 44px; line-height: 1; letter-spacing: -0.02em; }
+.label { font-size: 13px; color: var(--ink-2); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; border: 1px solid var(--line); background: var(--bg-sunken); color: var(--ink-2); }
+.pill-pos { background: color-mix(in oklch, var(--pos) 14%, transparent); color: var(--pos); border-color: color-mix(in oklch, var(--pos) 24%, transparent); }
+.pill-brand { background: var(--brand-tint); color: var(--brand); border-color: color-mix(in oklch, var(--brand) 24%, transparent); }
+
+.feat-row { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line-2); }
+.feat-row:last-child { border-bottom: none; }
+.feat-num { font-family: var(--font-serif); font-size: 28px; line-height: 1; color: var(--brand); }
+.feat-title { font-weight: 600; font-size: 15px; margin: 0 0 3px; }
+.feat-desc { color: var(--ink-2); font-size: 13px; line-height: 1.55; margin: 0; }
+
+pre { font-family: var(--font-mono); font-size: 12px; line-height: 1.65; color: var(--ink-2); white-space: pre; overflow-x: auto; margin: 0; padding: 16px 18px; background: var(--bg-sunken); border-radius: 10px; border: 1px solid var(--line); }
+.mono { font-family: var(--font-mono); }
+b { color: var(--ink); }
+.c { color: var(--brand); }
+.e { color: var(--ink-4); }
+.k { color: var(--c2); }
+
+a { color: var(--brand); text-decoration: none; border-bottom: 1px solid color-mix(in oklch, var(--brand) 40%, transparent); }
+a:hover { border-bottom-color: var(--brand); }
+
+footer { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 12px; display: flex; justify-content: space-between; }
+
+.step { display: flex; align-items: flex-start; gap: 16px; padding: 18px 20px; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 14px; }
+.step-num { font-family: var(--font-serif); font-size: 36px; color: var(--brand); line-height: 0.9; flex-shrink: 0; min-width: 32px; }
+.step h3 { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+.step p { margin: 0; color: var(--ink-2); font-size: 13px; line-height: 1.6; }
+.step pre { margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 32 32">
+        <rect x="0" y="0" width="32" height="32" rx="8" fill="var(--brand)" />
+        <path d="M6 10 H26 M16 10 V24" stroke="oklch(98% 0.02 155)" stroke-width="3.6" stroke-linecap="square" />
+        <circle cx="24" cy="6" r="3" fill="var(--pos)" stroke="var(--brand)" stroke-width="1.4" />
+      </svg>
+      <span class="logo-word">T<b>—Finance</b></span>
+    </div>
+    <div class="eyebrow" style="margin-top: 28px;">Личный финансовый трекер · v0.2</div>
+    <h1>Готово. <i>Просто работает.</i></h1>
+    <p class="lede">
+      Никаких серверов, никаких аккаунтов, никаких паролей. Все данные —
+      прямо в твоём браузере. Открыл сайт → пользуешься. Закрыл → данные на месте.
+      Котировки тянутся с Московской биржи в реальном времени.
+    </p>
+  </header>
+
+  <div class="grid-4" style="margin-top: 32px;">
+    <div class="card" style="background: var(--ink); color: var(--bg); border-color: var(--ink);">
+      <div class="kicker" style="color: oklch(78% 0.01 250);">ХРАНЕНИЕ</div>
+      <div class="num">в браузере</div>
+      <div class="label" style="color: oklch(78% 0.01 250);">localStorage · оффлайн</div>
+    </div>
+    <div class="card">
+      <div class="kicker">КОТИРОВКИ</div>
+      <div class="num">MOEX</div>
+      <div class="label">iss.moex.com · live · без ключа</div>
+    </div>
+    <div class="card">
+      <div class="kicker">ДЕПЛОЙ</div>
+      <div class="num">git push</div>
+      <div class="label">→ GitHub Pages автоматически</div>
+    </div>
+    <div class="card" style="background: var(--brand); color: oklch(98% 0.02 155); border-color: var(--brand);">
+      <div class="kicker" style="color: oklch(86% 0.04 155);">ЦЕНА</div>
+      <div class="num">0 ₽</div>
+      <div class="label" style="color: oklch(86% 0.04 155);">навсегда</div>
+    </div>
+  </div>
+
+  <!-- What works -->
+  <section>
+    <div class="section-hd">
+      <h2>Что работает</h2>
+      <p>Открой <span class="mono">localhost:3000</span> и пользуйся</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="feat-row">
+          <div class="feat-num">01</div>
+          <div>
+            <p class="feat-title">Счета · карты</p>
+            <p class="feat-desc">Дебетовые, накопительные, валютные, брокерские. Свой цвет и плашка для каждого.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-num">02</div>
+          <div>
+            <p class="feat-title">Новая операция</p>
+            <p class="feat-desc">Расход/доход в одно действие. Категория, дата, мерчант. Баланс пересчитывается сразу.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-num">03</div>
+          <div>
+            <p class="feat-title">Переводы между счетами</p>
+            <p class="feat-desc">Атомарно. История показывает обе стороны через <span class="mono">transfer_group_id</span>.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-num">04</div>
+          <div>
+            <p class="feat-title">Аналитика</p>
+            <p class="feat-desc">Категории за 30 дней с цветными барами и поток денег по месяцам.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="feat-row">
+          <div class="feat-num">05</div>
+          <div>
+            <p class="feat-title">Инвестиции · MOEX</p>
+            <p class="feat-desc">Наблюдение, портфель, покупка/продажа. Котировки SBER, YNDX, LKOH, GAZP, VTBR — с биржи, не моки.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-num">06</div>
+          <div>
+            <p class="feat-title">Кредиты · вклады</p>
+            <p class="feat-desc">Калькулятор аннуитетных платежей (PMT). Подаёшь заявку → видишь ежемесячный платёж.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-num">07</div>
+          <div>
+            <p class="feat-title">История</p>
+            <p class="feat-desc">Все операции, сгруппированные по дням. Цветные плашки категорий.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-num">08</div>
+          <div>
+            <p class="feat-title">Бэкап</p>
+            <p class="feat-desc">Профиль → «Скачать бэкап» (.json). Импорт работает тоже. Перенесёшь данные на другой комп.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to run -->
+  <section>
+    <div class="section-hd">
+      <h2>Как запустить</h2>
+      <p>3 минуты</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div style="flex: 1;">
+          <h3>Локально (для разработки)</h3>
+          <p>Открой терминал в папке проекта:</p>
+<pre><span class="e">cd</span> web
+npm install
+npm run dev
+
+<span class="e"># открой http://localhost:3000</span></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div style="flex: 1;">
+          <h3>На GitHub Pages (бесплатно навсегда)</h3>
+          <p>Создай репозиторий на GitHub, например <span class="mono">T-Finance</span>. Запушь проект:</p>
+<pre>git init
+git add -A
+git commit -m <span class="c">"init"</span>
+git branch -M main
+git remote add origin https://github.com/<span class="k">&lt;твой-username&gt;</span>/<span class="k">&lt;имя-репо&gt;</span>.git
+git push -u origin main</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div style="flex: 1;">
+          <h3>Включи Pages</h3>
+          <p>В репозитории на GitHub:</p>
+          <p style="margin-top: 8px;"><b>Settings</b> → <b>Pages</b> → <b>Source</b>: <b>GitHub Actions</b></p>
+          <p style="margin-top: 8px;">
+            Всё. Workflow в <span class="mono">.github/workflows/deploy.yml</span>
+            запустится сам и через ~2 минуты сайт будет на<br />
+            <span class="mono">https://&lt;username&gt;.github.io/&lt;имя-репо&gt;/</span>
+          </p>
+          <p style="margin-top: 8px;">Каждый последующий <span class="mono">git push</span> = автоматический деплой.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Storage caveat -->
+  <section>
+    <div class="section-hd">
+      <h2>Что важно знать</h2>
+      <p>Без сюрпризов потом</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="pill pill-brand">бэкап</span>
+        <p style="margin: 0; font-size: 14px; line-height: 1.6;">
+          Данные живут только в твоём браузере. Сменишь компьютер / почистишь кэш / поедешь в режим инкогнито — данные не подтянутся.
+          <b>Скачивай бэкап раз в неделю</b> (Профиль → Скачать бэкап). Это <span class="mono">.json</span> файл, его можно загрузить обратно одной кнопкой.
+        </p>
+      </div>
+      <div class="card">
+        <span class="pill">телефон ≠ комп</span>
+        <p style="margin: 0; font-size: 14px; line-height: 1.6;">
+          На телефоне и на компе будут разные базы. Если захочется синхронизации между устройствами — переключим на серверный режим (бэкенд уже написан, лежит в <span class="mono">backend/</span>). Это работа на один день.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>T-Finance · client-side · v0.2</span>
+    <span class="mono">23 · 05 · 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>

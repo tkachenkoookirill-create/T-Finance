@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>T-Finance</title>
+  <meta name="theme-color" content="#1b3b2c" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="app-src/app.css" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("tf_theme") || "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#1b3b2c" />
+      <path d="M9 13 H23 M16 13 V23" stroke="#e8f5ec" stroke-width="3.2" stroke-linecap="square" />
+      <circle cx="23" cy="9" r="2.6" fill="#3fbf6f" />
+    </svg>
+  </template>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- iOS / Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="T-Finance" />
+  <link rel="apple-touch-icon" href="data:image/png;base64,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" />
+
+  <!-- Android Chrome -->
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Service Worker registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(function (r) { console.log('[SW] registered, scope:', r.scope); })
+          .catch(function (e) { console.warn('[SW] registration failed:', e); });
+      });
+    }
+  </script>
+
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- cloud sync — must load BEFORE store.js to intercept localStorage writes -->
+  <script src="app-src/supabase-sync.js"></script>
+
+  <!-- store first (plain JS) -->
+  <script src="app-src/store.js"></script>
+
+  <!-- primitives, then screens, then shell -->
+  <script type="text/babel" src="app-src/ui.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/screens.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/screens2.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/screens3.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/analytics.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/analytics2.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/analytics3.jsx?v=2"></script>
+  <script type="text/babel" src="app-src/main.jsx?v=2"></script>
+</body>
+</html>

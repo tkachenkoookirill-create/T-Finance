@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "T-Finance",
+    "slug": "tfinance",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": { "resizeMode": "contain", "backgroundColor": "#f7f6f2" },
+    "ios": { "supportsTablet": false, "bundleIdentifier": "com.tfinance.app" },
+    "android": { "package": "com.tfinance.app" },
+    "extra": {
+      "apiUrl": "http://localhost:8000"
+    }
+  }
+}
