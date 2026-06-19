@@ -84,7 +84,7 @@ function Dashboard({ go, version }) {
       </div>
 
       <SectionTitle action={<button className="btn sm" onClick={() => go("accounts")}>Все счета</button>}>Счета</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
         {accounts.map((a) => (
           <div key={a.id} className="card pad" style={{ gap: 8 }}>
             <div className="row" style={{ gap: 8 }}><span className="dot" style={{ background: a.color }}></span><span style={{ fontWeight: 600, fontSize: 13.5 }}>{a.label}</span></div>

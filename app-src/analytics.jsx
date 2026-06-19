@@ -158,7 +158,7 @@ function Analytics({ go }) {
   );
 }
 
-const GRID = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(310px, 1fr))", gap: 16, alignItems: "start" };
+const GRID = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(310px, 100%), 1fr))", gap: 16, alignItems: "start" };
 
 // ════════════════════════════════════════════════════════
 // ОБЗОР
