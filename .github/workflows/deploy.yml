@@ -22,20 +22,8 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp "T-Finance App (standalone).html" _site/index.html
-          cp app-src/supabase-sync.js _site/supabase-sync.js
-          cp app-src/store.js _site/store.js
-          cp app-src/app.css _site/app.css
-          cp app-src/main.jsx _site/main.jsx
-          cp app-src/screens.jsx _site/screens.jsx
-          cp app-src/screens2.jsx _site/screens2.jsx
-          cp app-src/screens3.jsx _site/screens3.jsx
-          cp app-src/analytics.jsx _site/analytics.jsx
-          cp app-src/analytics2.jsx _site/analytics2.jsx
-          cp app-src/analytics3.jsx _site/analytics3.jsx
-          cp app-src/ui.jsx _site/ui.jsx
-          cp app-src/icon-192.png _site/icon-192.png
-          cp app-src/icon-512.png _site/icon-512.png
+          cp "T-Finance App.html" _site/index.html
+          cp -r app-src _site/app-src
           cp sw.js _site/sw.js
           cp manifest.json _site/manifest.json
           cp _site/index.html _site/404.html
