@@ -134,7 +134,7 @@ function CategoryBars({ cats }) {
 // ════════════════════════════════════════════════════════
 // ADD TRANSACTION
 // ════════════════════════════════════════════════════════
-const CAT_PRESETS = {
+window.CAT_PRESETS = {
   services:     ["Claude AI", "Yandex", "Spotify", "Whisper Flow", "tl;dv", "Sleep Cycle"],
   restaurants:  ["EVOS", "SUSU Пельмени", "Diet Bistro", "B&B", "Tim's"],
   gym:          ["Абонемент", "Тренер", "Спортпит"],
@@ -214,11 +214,11 @@ function AddTransaction({ go, onDone }) {
           </div>
         </div>
 
-        {CAT_PRESETS[cat] && (
+        {window.CAT_PRESETS[cat] && (
           <div className="field">
             <label>Быстрый выбор</label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-              {CAT_PRESETS[cat].map((p) => (
+              {window.CAT_PRESETS[cat].map((p) => (
                 <button key={p} type="button" onClick={() => setMerchant(p)}
                   className="btn sm"
                   style={{ borderColor: merchant === p ? "var(--brand)" : "var(--line)", background: merchant === p ? "var(--brand-tint)" : "var(--bg-elev)", color: merchant === p ? "var(--brand-ink)" : "var(--ink-2)", fontWeight: merchant === p ? 700 : 500 }}>

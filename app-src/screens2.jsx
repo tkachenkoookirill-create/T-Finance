@@ -276,6 +276,21 @@ function EditTxModal({ tx, accounts, onClose, refresh }) {
           </div>
         </div>
 
+        {window.CAT_PRESETS && window.CAT_PRESETS[cat] && (
+          <div className="field">
+            <label>Быстрый выбор</label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+              {window.CAT_PRESETS[cat].map((p) => (
+                <button key={p} type="button" onClick={() => setMerchant(p)}
+                  className="btn sm"
+                  style={{ borderColor: merchant === p ? "var(--brand)" : "var(--line)", background: merchant === p ? "var(--brand-tint)" : "var(--bg-elev)", color: merchant === p ? "var(--brand-ink)" : "var(--ink-2)", fontWeight: merchant === p ? 700 : 500 }}>
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="field">
           <label>Описание</label>
           <input className="input" placeholder={dir === "income" ? "Напр. Зарплата" : "Напр. Пятёрочка"} value={merchant} onChange={(e) => setMerchant(e.target.value)} />
