@@ -5,6 +5,7 @@
   var SUPABASE_URL  = 'https://vimxepexjtstnfugbptx.supabase.co';
   var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpbXhlcGV4anRzdG5mdWdicHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4ODE5MjMsImV4cCI6MjA5NzQ1NzkyM30.EzCoKGn55Dxi44dGra5uBcn8o3zzDl14u0rXK0m-j9U';
 
+  var FIXED_SYNC_ID = 'fc73dc94-f8f1-44ae-b551-01a2ca3b1e4f';
   var SYNC_ID_KEY = 'tf_sync_id';
   var SYNC_TS_KEY = 'tf_sync_ts';
   var DATA_KEYS   = [
@@ -24,19 +25,7 @@
 
   // ── Sync ID (UUID per user, generated once) ───────────────
   function getSyncId() {
-    var id = localStorage.getItem(SYNC_ID_KEY);
-    if (!id) {
-      // crypto.randomUUID is available in modern browsers
-      id = typeof crypto.randomUUID === 'function'
-        ? crypto.randomUUID()
-        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-          });
-      // Use _origSet to avoid triggering schedulePush
-      _origSet.call(localStorage, SYNC_ID_KEY, id);
-    }
-    return id;
+    return FIXED_SYNC_ID;
   }
 
   // ── Collect app data from localStorage ────────────────────
