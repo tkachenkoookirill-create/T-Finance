@@ -164,12 +164,29 @@ input, select { font-family: inherit; }
 .scrim { position: fixed; inset: 0; background: oklch(20% 0.012 250 / 0.35); display: grid; place-items: center; padding: 20px; z-index: 50; }
 .modal { background: var(--bg-elev); border-radius: var(--r-lg); box-shadow: var(--shadow-3); width: 100%; max-width: 440px; padding: 24px; max-height: 90vh; overflow-y: auto; }
 
+/* dashboard capital number — responsive, never overflows */
+.dash-capital { font-size: 40px; line-height: 1.05; overflow-wrap: anywhere; }
+.dash-flow { flex-wrap: wrap; }
+
 /* mobile */
 .mobile-tabbar { display: none; }
 @media (max-width: 760px) {
+  /* глобальная защита: ничто не вылезает за ширину экрана */
+  html, body { overflow-x: hidden; max-width: 100%; }
+
   .app { grid-template-columns: 1fr; }
   .sidebar { display: none; }
-  .main { padding: 18px 16px 96px; }
+  .main { padding: 16px 14px 96px; max-width: 100%; }
+
+  /* заголовки чуть компактнее */
+  .h1 { font-size: 22px; }
+
+  /* большое число капитала — подгоняем под узкий экран */
+  .dash-capital { font-size: 30px; }
+
+  /* строка Доход/Расход переносится и не растягивает карточку */
+  .dash-flow { gap: 6px 18px !important; }
+  .dash-flow > span { white-space: nowrap; }
   .mobile-topbar { display: flex !important; }
   .mobile-tabbar {
     display: grid; grid-auto-flow: column; position: fixed; bottom: 0; left: 0; right: 0;

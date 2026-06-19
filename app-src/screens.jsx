@@ -76,8 +76,8 @@ function Dashboard({ go, version }) {
 
       <div className="card pad" style={{ marginTop: 18, background: "var(--brand)", color: "var(--on-brand)", border: "none" }}>
         <div style={{ fontSize: 13, opacity: 0.8, fontWeight: 600 }}>Общий капитал</div>
-        <div className="mono" style={{ fontSize: 40, fontWeight: 700, marginTop: 4, letterSpacing: "-0.02em" }}>{fmtMoney(nw)}</div>
-        <div className="row" style={{ gap: 22, marginTop: 12, fontSize: 13 }}>
+        <div className="mono dash-capital" style={{ fontWeight: 700, marginTop: 4, letterSpacing: "-0.02em" }}>{fmtMoney(nw)}</div>
+        <div className="row dash-flow" style={{ gap: 22, marginTop: 12, fontSize: 13 }}>
           <span style={{ opacity: 0.85 }}><Icon name="arrowDown" size={13} /> Доход · {monthName}: <b className="mono">{fmtMoney(flow.inflow)}</b></span>
           <span style={{ opacity: 0.85 }}><Icon name="arrowUp" size={13} /> Расход · {monthName}: <b className="mono">{fmtMoney(flow.outflow)}</b></span>
         </div>
