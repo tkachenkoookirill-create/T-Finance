@@ -6,7 +6,6 @@
   var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpbXhlcGV4anRzdG5mdWdicHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4ODE5MjMsImV4cCI6MjA5NzQ1NzkyM30.EzCoKGn55Dxi44dGra5uBcn8o3zzDl14u0rXK0m-j9U';
 
   var FIXED_SYNC_ID = 'fc73dc94-f8f1-44ae-b551-01a2ca3b1e4f';
-  var SYNC_ID_KEY = 'tf_sync_id';
   var SYNC_TS_KEY = 'tf_sync_ts';
   var DATA_KEYS   = [
     'tf_user', 'tf_accounts', 'tf_transactions', 'tf_goals',
@@ -14,21 +13,14 @@
     'tf_an_tab', 'tf_adv_tab', 'tf_route',
   ];
 
-  // ── Supabase client (lazy) ────────────────────────────────
-  var _client = null;
-  function getClient() {
-    if (_client) return _client;
-    if (!window.supabase) { console.warn('[TFSync] supabase-js not loaded'); return null; }
-    _client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    return _client;
-  }
+  function log()  { console.log.apply(console, ['[TFSync]'].concat([].slice.call(arguments))); }
+  function warn() { console.warn.apply(console, ['[TFSync]'].concat([].slice.call(arguments))); }
 
-  // ── Sync ID (UUID per user, generated once) ───────────────
-  function getSyncId() {
-    return FIXED_SYNC_ID;
-  }
+  log('loaded · sync_id =', FIXED_SYNC_ID);
 
-  // ── Collect app data from localStorage ────────────────────
+  // keep a clean reference to setItem so our own writes don't trigger a push loop
+  var _origSet = Storage.prototype.setItem;
+
   function collect() {
     var d = {};
     DATA_KEYS.forEach(function (k) {
@@ -38,82 +30,83 @@
     return d;
   }
 
-  // ── Notify UI ─────────────────────────────────────────────
   function notify(status, ts) {
     window.dispatchEvent(new CustomEvent('tf_sync', { detail: { status: status, ts: ts || null } }));
   }
 
+  // ── REST helpers (no supabase-js dependency) ──────────────
+  function headers(extra) {
+    var h = {
+      'apikey': SUPABASE_ANON,
+      'Authorization': 'Bearer ' + SUPABASE_ANON,
+      'Content-Type': 'application/json',
+    };
+    if (extra) for (var k in extra) h[k] = extra[k];
+    return h;
+  }
+
   // ── Push local → Supabase ─────────────────────────────────
   async function push() {
-    var cl = getClient(); if (!cl) return;
     notify('pushing', null);
     var ts = new Date().toISOString();
     try {
-      var res = await cl.from('sync_data').upsert({
-        sync_id: getSyncId(), data: collect(), updated_at: ts,
+      var res = await fetch(SUPABASE_URL + '/rest/v1/sync_data', {
+        method: 'POST',
+        headers: headers({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+        body: JSON.stringify({ sync_id: FIXED_SYNC_ID, data: collect(), updated_at: ts }),
       });
-      if (!res.error) {
+      if (res.ok) {
         _origSet.call(localStorage, SYNC_TS_KEY, ts);
         notify('synced', ts);
+        log('✓ pushed at', ts);
       } else {
+        var txt = await res.text();
         notify('error', null);
-        console.warn('[TFSync] push error', res.error);
+        warn('push failed', res.status, txt);
       }
     } catch (e) {
       notify('error', null);
-      console.warn('[TFSync] push exception', e);
+      warn('push exception', e);
     }
   }
 
   // ── Pull Supabase → local ─────────────────────────────────
-  async function pull(syncId) {
-    var cl = getClient(); if (!cl) return false;
-    syncId = syncId || getSyncId();
+  async function pull() {
     try {
-      var res = await cl.from('sync_data')
-        .select('data, updated_at')
-        .eq('sync_id', syncId)
-        .maybeSingle();
-      if (res.error || !res.data) return false;
+      var res = await fetch(
+        SUPABASE_URL + '/rest/v1/sync_data?sync_id=eq.' + FIXED_SYNC_ID + '&select=data,updated_at',
+        { headers: headers() }
+      );
+      if (!res.ok) { warn('pull failed', res.status); return false; }
+      var rows = await res.json();
+      if (!rows.length) { log('cloud is empty'); return false; }
 
-      var remoteTs = res.data.updated_at;
+      var remoteTs = rows[0].updated_at;
       var localTs  = localStorage.getItem(SYNC_TS_KEY) || '0';
-      if (localTs >= remoteTs) { notify('uptodate', remoteTs); return false; }
+      log('compare · local:', localTs, '· remote:', remoteTs);
+      if (localTs >= remoteTs) { log('local is up to date'); notify('uptodate', remoteTs); return false; }
 
-      // Apply remote data
-      Object.keys(res.data.data).forEach(function (k) {
-        _origSet.call(localStorage, k, res.data.data[k]);
+      Object.keys(rows[0].data).forEach(function (k) {
+        _origSet.call(localStorage, k, rows[0].data[k]);
       });
       _origSet.call(localStorage, SYNC_TS_KEY, remoteTs);
       notify('pulled', remoteTs);
+      log('✓ pulled newer data from cloud');
       return true;
     } catch (e) {
-      console.warn('[TFSync] pull exception', e);
+      warn('pull exception', e);
       return false;
     }
-  }
-
-  // ── Connect with a key from another device ────────────────
-  async function connectKey(newKey) {
-    newKey = (newKey || '').trim();
-    if (!newKey) return false;
-    var ok = await pull(newKey);
-    if (ok) {
-      _origSet.call(localStorage, SYNC_ID_KEY, newKey);
-      setTimeout(function () { window.location.reload(); }, 120);
-    }
-    return ok;
   }
 
   // ── Debounced auto-push ───────────────────────────────────
   var _pushTimer = null;
   function schedulePush() {
     clearTimeout(_pushTimer);
-    _pushTimer = setTimeout(push, 4000);
+    _pushTimer = setTimeout(push, 1500);
   }
 
   // Intercept localStorage writes — patch BEFORE store.js runs
-  var _origSet = Storage.prototype.setItem;
   Storage.prototype.setItem = function (key, value) {
     _origSet.call(this, key, value);
     if (this === localStorage && DATA_KEYS.indexOf(key) !== -1) {
@@ -121,25 +114,26 @@
     }
   };
 
-  // ── Initial pull (once per browser session) ───────────────
+  // ── Initial pull on every load ────────────────────────────
   (async function init() {
-    if (sessionStorage.getItem('tf_synced_this_session')) return;
-    sessionStorage.setItem('tf_synced_this_session', '1');
     var updated = await pull();
     if (updated) {
+      log('reloading to apply cloud data…');
       setTimeout(function () { window.location.reload(); }, 100);
     }
   })();
 
   // Auto-pull when tab gets focus (user switches back)
-  window.addEventListener('focus', function () { pull(); });
+  window.addEventListener('focus', async function () {
+    var updated = await pull();
+    if (updated) setTimeout(function () { window.location.reload(); }, 100);
+  });
 
   // ── Public API ────────────────────────────────────────────
   window.TFSync = {
-    push        : push,
-    pull        : pull,
-    connectKey  : connectKey,
-    getSyncId   : getSyncId,
+    push: push,
+    pull: pull,
+    getSyncId: function () { return FIXED_SYNC_ID; },
     schedulePush: schedulePush,
   };
 })();
