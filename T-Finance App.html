@@ -51,16 +51,6 @@
   <!-- Android Chrome -->
   <meta name="mobile-web-app-capable" content="yes" />
 
-  <!-- Service Worker registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-          .then(function (r) { console.log('[SW] registered, scope:', r.scope); })
-          .catch(function (e) { console.warn('[SW] registration failed:', e); });
-      });
-    }
-  </script>
 
 </head>
 <body>
