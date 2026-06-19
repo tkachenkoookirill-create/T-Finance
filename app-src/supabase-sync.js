@@ -83,8 +83,10 @@
 
       var remoteTs = rows[0].updated_at;
       var localTs  = localStorage.getItem(SYNC_TS_KEY) || '0';
-      log('compare · local:', localTs, '· remote:', remoteTs);
-      if (localTs >= remoteTs) { log('local is up to date'); notify('uptodate', remoteTs); return false; }
+      var remoteMs = new Date(remoteTs).getTime();
+      var localMs  = localTs === '0' ? 0 : new Date(localTs).getTime();
+      log('compare · local:', localTs, '(' + localMs + ') · remote:', remoteTs, '(' + remoteMs + ')');
+      if (localMs >= remoteMs) { log('local is up to date'); notify('uptodate', remoteTs); return false; }
 
       Object.keys(rows[0].data).forEach(function (k) {
         _origSet.call(localStorage, k, rows[0].data[k]);
